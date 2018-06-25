@@ -1,4 +1,29 @@
-## nginx docker setting
+##nginx를 통해 특정 임계치가 넘으면 503을 반환
+
+
+docker-compose.yml
+
+```yaml
+nginx:
+    image: 'jinwoo/nginx:1.15.0'
+    environment:
+        NGINX_LOG_OUTPUT: 'stdout'
+        NGINX_LOG_TYPE: 'main'
+        NGINX_USER: 'root'
+        VIEW_CONFIG: "yes"
+        PROXY_MODE: "yes"
+        USE_NGINX_THROTTLE: "yes"
+        NGINX_THROTTLE_BY_URI: "yes"
+        NGINX_RATE_LIMIT: "50r/s"
+        NGINX_BURST: "5"
+        NGINX_SET_NODELAY: "no"
+        PROXY_PASS_ENDPOINT: 'http://13.112.13.42:9000'
+    ports:
+        - '80:80'
+```
+
+
+## nginx docker setting을 위한 환경 변수
 
 | enviroment variable |default |  Description|
 |--------|--------|------|

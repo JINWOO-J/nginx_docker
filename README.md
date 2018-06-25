@@ -1,4 +1,4 @@
-##nginx를 통해 특정 임계치가 넘으면 503을 반환
+## nginx를 통해 특정 임계치가 넘으면 503을 반환
 
 
 docker-compose.yml

@@ -1,0 +1,31 @@
+nginx:
+    image: 'jinwoo/nginx:1.15.0'
+    environment:
+        CLIENT_MAX_BODY_SIZE: '500M'
+      #   DOMAIN: 'intra.dev.jinwoo.xyz'
+      #   FASTCGI_READ_TIMEOUT: '5000'
+      #   FASTCGI_SEND_TIMEOUT: '5000'
+      #   LOCATION: "proxy_set_header  X-Real-IP  $$remote_addr;proxy_set_header X-Forwarded-For $$proxy_add_x_forwarded_for; location = /favicon.ico { access_log off; log_not_found off; }\nlocation = /robots.txt  { access_log off; log_not_found off; }\nlocation ~* ^.+\\.(jpeg|jpg|gif|png|bmp|ico|css|js|pdf|txt|doc|xls|xml|rtf|ppt|swf|exe|bar|apk|ipa|tar|tgz|gz|bz2|zip|rar|flv|avi|mp3|mpeg|mid|midi|wav)$$ {\nexpires 30d;\nadd_header Pragma public;\nadd_header Cache-Control \"public, mustrevalidate, proxy-revalidate\";\naccess_log off;\nbreak;\n}\n"
+      #   NGINX_ALLOW_IP: '1.214.197.106 112.169.122.203 127.0.0.1'
+      #   NGINX_LOG_FORMAT: '$$host $$realip_remote_addr $$remote_addr - $$remote_user [$$time_local] "$$request" $$status $$body_bytes_sent "$$http_referer" "$$http_user_agent" "$$http_x_forwarded_for"'
+      #   NGINX_LOG_OFF_URI: '/________HC.php /health/check'
+        NGINX_LOG_OUTPUT: 'stdout'
+        NGINX_LOG_TYPE: 'main'
+        NGINX_USER: 'root'
+      #   UPSTREAM: '13.112.13.42:9000'
+      #   USE_DEFAULT_SERVER: 'no'
+      #   USE_DOCKERIZE: 'yes'
+      #   WEBROOT: '/var/www/public/'
+        VIEW_CONFIG: "yes"
+        PROXY_MODE: "yes"
+        USE_NGINX_THROTTLE: "yes"
+        NGINX_THROTTLE_BY_URI: "yes"
+        NGINX_RATE_LIMIT: "50r/s"
+        NGINX_BURST: "5"
+        NGINX_SET_NODELAY: "no"
+        PROXY_PASS_ENDPOINT: 'http://13.112.13.42:9000'
+    ports:
+        - '80:80'
+        
+
+

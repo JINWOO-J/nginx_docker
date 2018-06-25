@@ -1,0 +1,42 @@
+server {
+
+    listen 443 ssl;
+
+    server_name {{ .Env.DOMAIN }};
+
+
+    access_log  /var/log/nginx/$host-access.log main;
+    error_log   /var/log/nginx/$host-error.log error;
+
+    root {{ .Env.WEBROOT }};
+
+    ssl_certificate /var/certs/{{ .Env.DOMAIN }}.crt;
+    ssl_certificate_key /var/certs/{{ .Env.DOMAIN }}.key;
+
+    index index.html index.php index.htm;
+
+    location / {
+            #try_files $uri $uri/ =404;
+            try_files $uri $uri/ /index.php?$query_string;
+            proxy_pass_header api_key;
+    }
+
+    location ~ [^/]\.php(/|$) {
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_index /index.php;
+        include fastcgi_params;
+        fastcgi_split_path_info       ^(.+\.php)(/.+)$;
+        fastcgi_param PATH_INFO       $fastcgi_path_info;
+        fastcgi_param PATH_TRANSLATED $document_root$fastcgi_path_info;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        try_files   $uri =404;
+        fastcgi_pass _upstreamer;
+    }
+
+    location ~ /\.ht {
+        deny all;
+    }
+    {{ .Env.LOCATION }}
+}
+
+{{ .Env.NGINX_EXTRACONF }}

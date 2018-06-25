@@ -1,0 +1,149 @@
+upstream _upstreamer {
+        server  {{ .Env.UPSTREAM }};
+}
+
+{{ .Env.USE_DEFAULT_SERVER_CONF }}
+
+
+map $request $loggable {
+    {{ range $access_log_off :=  split .Env.NGINX_LOG_OFF_URI " " }}
+        {{ if ne $access_log_off "" }}
+            {{ printf "~%v 0;" $access_log_off }}
+        {{ end }}
+    {{ end }}
+    default 1;
+}
+
+server {
+    listen {{ .Env.LISTEN_PORT }};
+    server_name {{ .Env.DOMAIN }};
+
+{{ if eq .Env.NGINX_LOG_OUTPUT "stdout" }}
+    access_log /dev/stdout main;
+    error_log /dev/stderr error;
+{{ else if eq  .Env.NGINX_LOG_OUTPUT "file"}}
+    access_log  /var/log/nginx/$host-access.log main if=$loggable;
+    error_log   /var/log/nginx/$host-error.log error;
+{{ end }}
+
+{{ if eq .Env.PROXY_MODE "yes" }}
+
+    location / {
+        {{ if eq .Env.USE_NGINX_THROTTLE "yes" }}
+            {{ if eq .Env.NGINX_THROTTLE_BY_IP "yes" }}
+        limit_req zone=by_ip burst={{.Env.NGINX_BURST}} {{.Env.NGINX_NODELAY}};
+            {{ end }}
+            {{ if eq .Env.NGINX_THROTTLE_BY_URI "yes" }}
+        limit_req zone=by_uri burst={{.Env.NGINX_BURST}} {{.Env.NGINX_NODELAY}};
+            {{ end }}            
+        {{ end }}
+
+        {{ range $ipaddr :=  split .Env.NGINX_DENY_IP " " }}
+            {{ if ne $ipaddr "" }}
+                {{ printf "deny %v;" $ipaddr }}
+            {{ end }}
+        {{ end }}        
+
+        proxy_pass {{.Env.PROXY_PASS_ENDPOINT}};
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_read_timeout {{.Env.NGINX_PROXY_TIMEOUT}};
+    }
+
+{{ else }}
+
+        root {{ .Env.WEBROOT }};
+        index index.html index.php index.htm;
+
+        location / {
+            #try_files $uri $uri/ =404;
+    {{ range $ipaddr :=  split .Env.NGINX_DENY_IP " " }}
+        {{ if ne $ipaddr "" }}
+            {{ printf "deny %v;" $ipaddr }}
+        {{ end }}
+    {{ end }}
+
+    {{ if gt (len .Env.DEFAULT_EXT_LOCATION)  0 }}
+            try_files $uri $uri/ /index.{{.Env.DEFAULT_EXT_LOCATION}}?$query_string;
+            proxy_pass_header api_key;
+    {{ end }}
+        }
+
+    {{ if gt (len .Env.DEFAULT_EXT_LOCATION)  0 }}
+        location ~ [^/]\.{{.Env.DEFAULT_EXT_LOCATION}}(/|$) {
+            #include fastcgi-php.conf; 
+            fastcgi_index /index.{{.Env.DEFAULT_EXT_LOCATION}};
+            include fastcgi_params;
+            fastcgi_split_path_info       ^(.+\.{{.Env.DEFAULT_EXT_LOCATION}})(/.+)$;
+            fastcgi_param PATH_INFO       $fastcgi_path_info;
+            fastcgi_param PATH_TRANSLATED $document_root$fastcgi_path_info;
+            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+            try_files   $uri =404;        
+            fastcgi_pass _upstreamer;
+        }
+    {{ end }}
+
+{{ end }}
+
+    location /robots.txt {
+        allow all;
+        log_not_found off;
+        access_log off;
+    }
+
+    location ~ /\.ht {
+        deny all;
+    }
+
+{{ if eq .Env.USE_VTS_STATUS "yes" }}
+    location /vts_status {
+        vhost_traffic_status_display;
+        vhost_traffic_status_display_format html;
+        #excluded from the status traffic
+        vhost_traffic_status_bypass_limit on;
+        vhost_traffic_status_bypass_stats on;
+{{ range $ipaddr :=  split .Env.NGINX_ALLOW_IP " " }}
+    {{ if ne $ipaddr "" }}
+        {{ printf "allow %v;" $ipaddr }}
+    {{ end }}
+{{end}}
+        allow 127.0.0.1;
+        access_log off;
+        deny all;
+    }
+{{ end }}
+
+{{ if eq .Env.USE_NGINX_STATUS "yes" }}
+    location ~ /{{ .Env.NGINX_STATUS_URI }}($|/) {
+        stub_status on;
+        access_log   off;
+{{ range $ipaddr :=  split .Env.NGINX_ALLOW_IP " " }}
+    {{ if ne $ipaddr "" }}
+        {{ printf "allow %v;" $ipaddr }}
+    {{ end }}
+{{end}}
+        allow 127.0.0.1;
+        allow {{ .Env.NGINX_STATUS_URI_ALLOWIP }};
+        deny all;
+    }
+{{ end }}
+{{ if eq .Env.USE_PHP_STATUS "yes" }}
+    location = /{{ .Env.PHP_STATUS_URI }} {
+        include fastcgi_params;
+        access_log   off;
+        fastcgi_param SCRIPT_FILENAME /{{ .Env.PHP_STATUS_URI }};
+        fastcgi_param SCRIPT_NAME /{{ .Env.PHP_STATUS_URI }};
+        fastcgi_pass _upstreamer;
+{{ range $ipaddr :=  split .Env.NGINX_ALLOW_IP " " }}
+    {{ if ne $ipaddr "" }}
+        {{ printf "allow %v;" $ipaddr }}
+    {{ end }}
+{{end}}
+        allow 127.0.0.1;
+        allow {{ .Env.PHP_STATUS_URI_ALLOWIP }};
+        deny all;
+    }
+{{ end }}
+    {{ .Env.LOCATION }}
+}
+{{ .Env.NGINX_EXTRACONF }}

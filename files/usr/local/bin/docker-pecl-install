@@ -1,0 +1,115 @@
+#!/bin/bash
+#set -e
+# 
+# PHP_LIB="$1"
+# extDir="/usr/src/php/ext/$ext"
+# if [ -z "$ext" -o ! -d "$extDir" ]; then
+# 	echo >&2 "usage: $0 ext-name [configure flags]"
+# 	echo >&2 "   ie: $0 gd --with-jpeg-dir=/usr/local/something"
+# 	echo >&2
+# 	echo >&2 'Possible values for ext-name:'
+# 	echo >&2 $(find /usr/src/php/ext -mindepth 2 -maxdepth 2 -type f -name 'config.m4' | cut -d/ -f6 | sort)
+# 	exit 1
+# fi
+# shift
+# 
+# set -x
+# cd "$extDir"
+# phpize
+# ./configure "$@"
+
+function trim() {
+    local var=${@}
+    var="${var#"${var%%[![:space:]]*}"}"   # remove leading whitespace characters
+    var="${var%"${var##*[![:space:]]}"}"   # remove trailing whitespace characters
+    echo -n "$var"
+}
+
+function print_w(){
+	RESET='\e[0m'  # RESET
+	BWhite='\e[7m';    # backgroud White
+
+	local msg=$(trim ${@});
+	printf "${BWhite} ${msg} ${RESET}\n";
+#	printf "${BWhite}  ${@} ${RESET}\n";	
+}
+
+function PrintOK() {
+    IRed='\e[0;91m'         # Rosso
+    IGreen='\e[0;92m'       # Verde
+    RESET='\e[0m'  # RESET
+    MSG=${1}
+    CHECK=${2:-0}
+
+    if [ ${CHECK} == 0 ];
+    then
+        printf "${IGreen} [OK] ${CHECK},  ${MSG} ${RESET} \n"
+    else
+        printf "${IRed} [FAIL] ${CHECK},  ${MSG} ${RESET} \n"
+        printf "${IRed} [FAIL] Stopped script ${RESET} \n"
+        exit 0;
+    fi
+}
+
+
+
+PHP_LIB="$@";
+
+extension_path=`php-config --extension-dir`
+extension_ini="/etc/php/conf.d"
+
+WORK_DIR="/usr/src/pecl";
+
+
+if [ ! -d "$WORK_DIR" ]
+then
+	print_w "Make Directory - $WORK_DIR"
+	mkdir -v $WORK_DIR
+fi
+
+cd $WORK_DIR
+
+echo "extension-dir: $extension_path";
+echo "install lib list : $PHP_LIB";
+
+for lib in $PHP_LIB
+do
+	rm -rf ${lib}.tgz 		
+	rm -rf ${lib} 		
+	print_w "Installing - PHP lib :: ${lib}"
+	if [ $lib == "memcached-2.2.0" ]
+	then
+		git clone https://github.com/rlerdorf/php-memcached
+		pushd php-memcached
+	else
+		wget -q -c http://pecl.php.net/get/${lib}.tgz
+	
+		wget -q -c http://pecl.php.net/get/${lib}.tgz
+	#	PrintOK "Download check  ${lib}.tgz" $?	
+		find ${lib}.tgz   # file command는 STDERR가 없다	
+		PrintOK "File check  ${lib}.tgz" $?
+		tar zxf ${lib}.tgz
+	   	pushd ${lib}		
+	fi 
+
+	phpize	
+	./configure   > /dev/null 
+	PrintOK "PHPLib ${lib} :: ./configure" $?
+	make -j"$(nproc)"    > /dev/null 
+	PrintOK "PHPLib ${lib} :: make " $?
+	make install    > /dev/null 
+	PrintOK "PHPLib ${lib} :: make install " $?
+
+	checkfile=`echo ${lib}| cut -d "-" -f1`
+	find "${extension_path}/${checkfile}.so" >>/dev/null
+	PrintOK "PHPLib file check ${extension_path}/${checkfile}.so" $?
+	
+	if [ ! -f "$extension_ini/${checkfile}.ini" ]
+	then
+		echo "extension=${checkfile}.so" > $extension_ini/${checkfile}.ini 		
+	fi
+		
+
+	popd
+
+done

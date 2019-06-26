@@ -61,6 +61,7 @@ export PROXY_PASS_ENDPOINT=${PROXY_PASS_ENDPOINT:-""}     # proxy_pass 의 endpo
 export NGINX_ZONE_MEMORY=${NGINX_ZONE_MEMORY:-"10m"}    #rate limit에 사용되는 저장소 크기
 export NGINX_RATE_LIMIT=${NGINX_RATE_LIMIT:-"100r/s"}   # rate limit 임계치
 export NGINX_BURST=${NGINX_BURST:-"10"}                 # rate limit을 초과시, 저장하는 최대 큐값 (10일 경우 limit을 넘어가는 11번째 부터 적용)
+export SET_REAL_IP_FROM=${SET_REAL_IP_FROM:-""}   # SET_REAL_IP_FROM
 
 if [[ $NGINX_SET_NODELAY -eq "yes" ]];                  # rate limit 초과시 delay를 주는 옵션  (yes/no)
 then

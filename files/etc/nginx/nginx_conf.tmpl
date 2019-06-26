@@ -39,6 +39,14 @@ http {
 
     set_real_ip_from 172.17.0.1/32;
     set_real_ip_from 127.0.0.1;
+    {{ if gt (len .Env.SET_REAL_IP_FROM)  0 }}
+        {{ range $ip_from :=  split .Env.SET_REAL_IP_FROM " " }}
+            {{ if ne $ip_from "" }}
+                {{ printf "set_real_ip_from %v;" $ip_from }}
+            {{ end }}
+        {{ end }}    
+    {{ end }}
+
     real_ip_header X-Forwarded-For;
 
 {{ if eq .Env.USE_NGINX_THROTTLE "yes" }}    

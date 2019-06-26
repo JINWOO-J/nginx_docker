@@ -1,7 +1,7 @@
 REPO = dr.yt.com
 REPO_HUB = jinwoo
 NAME = nginx
-VERSION = 1.15.0
+VERSION = 1.16.0
 TAGNAME = $(VERSION)
 #include ENVAR
 
@@ -29,8 +29,8 @@ build:
 		docker build --no-cache --rm=true --build-arg NGINX_VERSION=$(NAME)-$(VERSION) -t $(REPO_HUB)/$(NAME):$(TAGNAME) .
 
 push:
-		docker tag  $(NAME):$(VERSION) $(REPO)/$(NAME):$(TAGNAME)
-		docker push $(REPO)/$(NAME):$(TAGNAME)
+		# docker tag  $(NAME):$(VERSION) $(REPO)/$(NAME):$(TAGNAME)
+		docker push $(REPO_HUB)/$(NAME):$(TAGNAME)
 
 prod:
 		docker tag $(REPO_HUB)/$(NAME):$(TAGNAME)  $(REPO_HUB)/$(NAME):$(VERSION)

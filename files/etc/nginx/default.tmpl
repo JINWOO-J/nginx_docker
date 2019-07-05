@@ -4,6 +4,14 @@ upstream _upstreamer {
 
 {{ .Env.USE_DEFAULT_SERVER_CONF }}
 
+map $status $loggable {
+    {{ range $access_log_off :=  split .Env.NGINX_LOG_OFF_STATUS " " }}
+        {{ if ne $access_log_off "" }}
+            {{ printf "~%v 0;" $access_log_off }}
+        {{ end }}
+    {{ end }}
+    default 1;
+}
 
 map $request $loggable {
     {{ range $access_log_off :=  split .Env.NGINX_LOG_OFF_URI " " }}
@@ -15,7 +23,7 @@ map $request $loggable {
 }
 
 server {
-    listen {{ .Env.LISTEN_PORT }};
+    listen {{ .Env.LISTEN_PORT }} {{ if eq .Env.GRPC_PROXY_MODE "yes" }} http2 {{ end }} ;
     server_name {{ .Env.DOMAIN }};
 
 {{ if eq .Env.NGINX_LOG_OUTPUT "stdout" }}
@@ -38,6 +46,10 @@ server {
             {{ end }}            
         {{ end }}
 
+        {{  if eq .Env.PRIORTY_RULE "deny" }}
+            deny all;
+        {{ end }}
+
         {{ range $ipaddr :=  split .Env.NGINX_DENY_IP " " }}
             {{ if ne $ipaddr "" }}
                 {{ printf "deny %v;" $ipaddr }}
@@ -49,7 +61,32 @@ server {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_read_timeout {{.Env.NGINX_PROXY_TIMEOUT}};
     }
+{{ else if eq .Env.GRPC_PROXY_MODE "yes" }}
+    location / {
+        {{ if eq .Env.USE_NGINX_THROTTLE "yes" }}
+            {{ if eq .Env.NGINX_THROTTLE_BY_IP "yes" }}
+        limit_req zone=by_ip burst={{.Env.NGINX_BURST}} {{.Env.NGINX_NODELAY}};
+            {{ end }}
+            {{ if eq .Env.NGINX_THROTTLE_BY_URI "yes" }}
+        limit_req zone=by_uri burst={{.Env.NGINX_BURST}} {{.Env.NGINX_NODELAY}};
+            {{ end }}            
+        {{ end }}
 
+        {{  if eq .Env.PRIORTY_RULE "deny" }}
+            deny all;
+        {{ end }}
+        
+        {{ range $ipaddr :=  split .Env.NGINX_DENY_IP " " }}
+            {{ if ne $ipaddr "" }}
+                {{ printf "deny %v;" $ipaddr }}
+            {{ end }}
+        {{ end }}        
+
+        grpc_pass {{.Env.PROXY_PASS_ENDPOINT}};
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        grpc_read_timeout {{.Env.NGINX_PROXY_TIMEOUT}};
+    }
 {{ else }}
 
         root {{ .Env.WEBROOT }};

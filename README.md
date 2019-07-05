@@ -1,29 +1,4 @@
-## nginx를 통해 특정 임계치가 넘으면 503을 반환
-
-
-docker-compose.yml
-
-```yaml
-nginx:
-    image: 'jinwoo/nginx:1.15.0'
-    environment:
-        NGINX_LOG_OUTPUT: 'stdout'
-        NGINX_LOG_TYPE: 'main'
-        NGINX_USER: 'root'
-        VIEW_CONFIG: "yes"
-        PROXY_MODE: "yes"
-        USE_NGINX_THROTTLE: "yes"
-        NGINX_THROTTLE_BY_URI: "yes"
-        NGINX_RATE_LIMIT: "50r/s"
-        NGINX_BURST: "5"
-        NGINX_SET_NODELAY: "no"
-        PROXY_PASS_ENDPOINT: 'http://13.112.13.42:9000'
-    ports:
-        - '80:80'
-```
-
-
-## nginx docker setting을 위한 환경 변수
+## nginx docker setting
 
 | enviroment variable |default |  Description|
 |--------|--------|------|
@@ -64,9 +39,11 @@ nginx:
  USE\_PHP\_STATUS|no|no
  PHP\_STATUS\_URI|php\_status|php\_status
  PHP\_STATUS\_URI\_ALLOWIP|127.0.0.1|127.0.0.1
+ PRIORTY\_RULE|allow|allow
  NGINX\_ALLOW\_IP|    | ADMIN IP ADDR
  NGINX\_DENY\_IP||
  NGINX\_LOG\_OFF\_URI||
+ NGINX\_LOG\_OFF\_STATUS||
  DEFAULT\_EXT\_LOCATION|php  | extension 설정  ~/.jsp ~/.php
  PROXY\_MODE|no   | Proxy mode 사용 여부 (yes/no)
  USE\_NGINX\_THROTTLE|no | rate limit 사용 여부  (yes/no)
@@ -76,4 +53,5 @@ nginx:
  NGINX\_ZONE\_MEMORY|10m    |rate limit에 사용되는 저장소 크기
  NGINX\_RATE\_LIMIT|100r/s   | rate limit 임계치
  NGINX\_BURST|10                 | rate limit을 초과시, 저장하는 최대 큐값 (10일 경우 limit을 넘어가는 11번째 부터 적용)
+ SET\_REAL\_IP\_FROM|0.0.0.0/0   | SET\_REAL\_IP\_FROM
  NGINX\_PROXY\_TIMEOUT|90  |90  

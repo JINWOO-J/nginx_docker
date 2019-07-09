@@ -53,10 +53,12 @@ export NGINX_LOG_OFF_STATUS=${NGINX_LOG_OFF_STATUS:-""}
 export DEFAULT_EXT_LOCATION=${DEFAULT_EXT_LOCATION:-"php"}  # extension 설정  ~/.jsp ~/.php
 
 export PROXY_MODE=${PROXY_MODE:-"no"}   # Proxy mode 사용 여부 (yes/no)
+export GRPC_PROXY_MODE=${GRPC_PROXY_MODE:-"no"} # gRPC proxy mode 사용 여부 (yes/no)
+
 export USE_NGINX_THROTTLE=${USE_NGINX_THROTTLE:-"no"} # rate limit 사용 여부  (yes/no)
 
 export NGINX_THROTTLE_BY_URI=${NGINX_THROTTLE_BY_URI:-"no"} # URI 기반의 rate limit 사용 여부  (yes/no)
-export NGINX_THROTTLE_BY_IP=${NGINX_THROTTLE_BY_IP:-"no"}    # IP 기반의 rate limit 사용 여부  (yes/no)
+export NGINX_THROTTLE_BY_IP=${NGINX_THROTTLE_BY_IP:-"no"}  # IP 기반의 rate limit 사용 여부  (yes/no)
 
 export PROXY_PASS_ENDPOINT=${PROXY_PASS_ENDPOINT:-""}     # proxy_pass 의 endpoint
 
@@ -64,6 +66,8 @@ export NGINX_ZONE_MEMORY=${NGINX_ZONE_MEMORY:-"10m"}    #rate limit에 사용되
 export NGINX_RATE_LIMIT=${NGINX_RATE_LIMIT:-"100r/s"}   # rate limit 임계치
 export NGINX_BURST=${NGINX_BURST:-"10"}                 # rate limit을 초과시, 저장하는 최대 큐값 (10일 경우 limit을 넘어가는 11번째 부터 적용)
 export SET_REAL_IP_FROM=${SET_REAL_IP_FROM:-"0.0.0.0/0"}   # SET_REAL_IP_FROM
+
+
 
 if [[ $NGINX_SET_NODELAY -eq "yes" ]];                  # rate limit 초과시 delay를 주는 옵션  (yes/no)
 then

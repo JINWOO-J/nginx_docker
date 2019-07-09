@@ -1,7 +1,7 @@
 REPO = dr.yt.com
 REPO_HUB = jinwoo
 NAME = nginx
-VERSION = 1.16.0
+VERSION = 1.17.1
 TAGNAME = $(VERSION)
 #include ENVAR
 

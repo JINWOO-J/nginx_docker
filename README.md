@@ -46,9 +46,10 @@
  NGINX\_LOG\_OFF\_STATUS||
  DEFAULT\_EXT\_LOCATION|php  | extension 설정  ~/.jsp ~/.php
  PROXY\_MODE|no   | Proxy mode 사용 여부 (yes/no)
+ GRPC\_PROXY\_MODE|no | gRPC proxy mode 사용 여부 (yes/no)
  USE\_NGINX\_THROTTLE|no | rate limit 사용 여부  (yes/no)
  NGINX\_THROTTLE\_BY\_URI|no | URI 기반의 rate limit 사용 여부  (yes/no)
- NGINX\_THROTTLE\_BY\_IP|no    | IP 기반의 rate limit 사용 여부  (yes/no)
+ NGINX\_THROTTLE\_BY\_IP|no  | IP 기반의 rate limit 사용 여부  (yes/no)
  PROXY\_PASS\_ENDPOINT|     | proxy\_pass 의 endpoint
  NGINX\_ZONE\_MEMORY|10m    |rate limit에 사용되는 저장소 크기
  NGINX\_RATE\_LIMIT|100r/s   | rate limit 임계치

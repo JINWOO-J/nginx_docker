@@ -20,6 +20,7 @@ http {
     ## TCP options
     tcp_nodelay {{ .Env.TCP_NODELAY }};
     tcp_nopush  {{ .Env.TCP_NOPUSH }};
+    real_ip_recursive on;
 
     types_hash_max_size {{ .Env.TYPES_HASH_MAX_SIZE }};
     client_body_buffer_size  {{ .Env.CLIENT_BODY_BUFFER_SIZE }};

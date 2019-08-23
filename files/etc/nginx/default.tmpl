@@ -37,11 +37,18 @@ server {
         limit_req zone=by_uri burst={{.Env.NGINX_BURST}} {{.Env.NGINX_NODELAY}};
             {{ end }}
         {{ end }}
+        {{ if eq .Env.PREP_NGINX_ALLOWIP "yes" }}
         include /etc/nginx/conf.d/*.conf;
-        {{ if eq .Env.USER_NGINX_ALLOWIP "yes" }}
         include /etc/nginx/user_conf/*.conf;
-        {{ end }}
+        allow 15.164.151.101;
+        allow 15.164.183.120;
+        allow 52.79.145.149;
+        allow 54.180.178.129;
         deny all;
+        {{ end }}
+        {{ if eq .Env.PREP_NGINX_ALLOWIP "no" }}
+        allow all;
+        {{ end }}
         proxy_pass {{.Env.PREP_PROXY_PASS_ENDPOINT}};
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -110,13 +117,19 @@ server {
             {{ end }}
         {{ end }}        
 
-        {{ if eq .Env.USER_NGINX_ALLOWIP "yes" }}
+        {{ if eq .Env.PREP_NGINX_ALLOWIP "yes" }}
         include /etc/nginx/user_conf/*.conf;
-        {{ end }}
-        {{ if eq .Env.PREP_MODE "yes" }}
         include /etc/nginx/conf.d/*.conf;
+        allow 15.164.151.101;
+        allow 15.164.183.120;
+        allow 52.79.145.149;
+        allow 54.180.178.129;
         deny all;
         {{ end }}
+        {{ if eq .Env.PREP_NGINX_ALLOWIP "no" }}
+        allow all;
+        {{ end }}
+
         grpc_pass {{.Env.PROXY_PASS_ENDPOINT}};
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;

@@ -1,5 +1,5 @@
 #!/bin/bash
-export USER_NGINX_ALLOWIP=${USER_NGINX_ALLOWIP:-"no"} # prep node IP 외 allow ip 추가 여부 (yes/no), yes 경우 해당경로/etc/nginx/user_conf 마운트 필수
+export PREP_NGINX_ALLOWIP=${PREP_NGINX_ALLOWIP:-"no"} # prep node IP 외 allow ip 추가 여부 (yes/no), yes 경우 해당경로/etc/nginx/user_conf 마운트 필수 & allow all 설정할 경우 no 로 설정
 export PREP_MODE=${PREP_MODE:-"no"} # nginx allow ip 가 dynamic 할 경우 (yes/no)
 export PREP_NODE_LIST_API=${PREP_NODE_LIST_API:-""} # prep node ip check URL API (필수)
 export PREP_LISTEN_PORT=${PREP_LISTEN_PORT:-""} # prep mode 시 필수

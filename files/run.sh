@@ -1,4 +1,5 @@
 #!/bin/bash
+export TRACKER_IPLIST=${TRACKER_IPLIST:-"allow 15.164.151.101;allow 15.164.183.120;allow 52.79.145.149;allow 54.180.178.129;"} # tracker 가 prep 모니터링을 위해 사용됨
 export PREP_NGINX_ALLOWIP=${PREP_NGINX_ALLOWIP:-"no"} # prep node IP 외 allow ip 추가 여부 (yes/no), yes 경우 해당경로/etc/nginx/user_conf 마운트 필수 & allow all 설정할 경우 no 로 설정
 export PREP_MODE=${PREP_MODE:-"no"} # nginx allow ip 가 dynamic 할 경우 (yes/no)
 export PREP_NODE_LIST_API=${PREP_NODE_LIST_API:-""} # prep node ip check URL API (필수)
@@ -130,5 +131,6 @@ fi
 print_w "START >> ${NGINX_VERSION}"
 
 echo $PREP_NODE_LIST_API > /etc/nginx/policy/.cron-env
+echo $TRACKER_IPLIST > /etc/nginx/conf.d/tracker_IP.conf
 
 nginx

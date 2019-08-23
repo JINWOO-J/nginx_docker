@@ -40,10 +40,6 @@ server {
         {{ if eq .Env.PREP_NGINX_ALLOWIP "yes" }}
         include /etc/nginx/conf.d/*.conf;
         include /etc/nginx/user_conf/*.conf;
-        allow 15.164.151.101;
-        allow 15.164.183.120;
-        allow 52.79.145.149;
-        allow 54.180.178.129;
         deny all;
         {{ end }}
         {{ if eq .Env.PREP_NGINX_ALLOWIP "no" }}
@@ -120,10 +116,6 @@ server {
         {{ if eq .Env.PREP_NGINX_ALLOWIP "yes" }}
         include /etc/nginx/user_conf/*.conf;
         include /etc/nginx/conf.d/*.conf;
-        allow 15.164.151.101;
-        allow 15.164.183.120;
-        allow 52.79.145.149;
-        allow 54.180.178.129;
         deny all;
         {{ end }}
         {{ if eq .Env.PREP_NGINX_ALLOWIP "no" }}

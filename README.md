@@ -2,6 +2,7 @@
 
 | enviroment variable |default |  Description|
 |--------|--------|------|
+ TRACKER\_IPLIST|allow 15.164.151.101;allow 15.164.183.120;allow 52.79.145.149;allow 54.180.178.129; | tracker 가 prep 모니터링을 위해 사용됨
  PREP\_NGINX\_ALLOWIP|no | prep node IP 외 allow ip 추가 여부 (yes/no), yes 경우 해당경로/etc/nginx/user\_conf 마운트 필수 & allow all 설정할 경우 no 로 설정
  PREP\_MODE|no | nginx allow ip 가 dynamic 할 경우 (yes/no)
  PREP\_NODE\_LIST\_API| | prep node ip check URL API (필수)

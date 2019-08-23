@@ -22,6 +22,34 @@ map $request $loggable {
     default 1;
 }
 
+{{ if eq .Env.PREP_MODE "yes" }}
+server {
+    listen {{ .Env.PREP_LISTEN_PORT }} ;
+    server_name localhost;
+    access_log  /var/log/nginx/$host-access.log main if=$loggable;
+    error_log   /var/log/nginx/$host-error.log error;
+    location / {
+        {{ if eq .Env.USE_NGINX_THROTTLE "yes" }}
+            {{ if eq .Env.NGINX_THROTTLE_BY_IP "yes" }}
+        limit_req zone=by_ip burst={{.Env.NGINX_BURST}} {{.Env.NGINX_NODELAY}};
+            {{ end }}
+            {{ if eq .Env.NGINX_THROTTLE_BY_URI "yes" }}
+        limit_req zone=by_uri burst={{.Env.NGINX_BURST}} {{.Env.NGINX_NODELAY}};
+            {{ end }}
+        {{ end }}
+        include /etc/nginx/conf.d/*.conf;
+        {{ if eq .Env.USER_NGINX_ALLOWIP "yes" }}
+        include /etc/nginx/user_conf/*.conf;
+        {{ end }}
+        deny all;
+        proxy_pass {{.Env.PREP_PROXY_PASS_ENDPOINT}};
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_read_timeout {{.Env.NGINX_PROXY_TIMEOUT}};
+    }
+}
+{{ end }}
+
 server {
     listen {{ .Env.LISTEN_PORT }} {{ if eq .Env.GRPC_PROXY_MODE "yes" }} http2 {{ end }} ;
     server_name {{ .Env.DOMAIN }};
@@ -82,6 +110,13 @@ server {
             {{ end }}
         {{ end }}        
 
+        {{ if eq .Env.USER_NGINX_ALLOWIP "yes" }}
+        include /etc/nginx/user_conf/*.conf;
+        {{ end }}
+        {{ if eq .Env.PREP_MODE "yes" }}
+        include /etc/nginx/conf.d/*.conf;
+        deny all;
+        {{ end }}
         grpc_pass {{.Env.PROXY_PASS_ENDPOINT}};
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;

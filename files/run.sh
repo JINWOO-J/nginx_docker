@@ -1,4 +1,9 @@
 #!/bin/bash
+export USER_NGINX_ALLOWIP=${USER_NGINX_ALLOWIP:-"no"} # prep node IP 외 allow ip 추가 여부 (yes/no), yes 경우 해당경로/etc/nginx/user_conf 마운트 필수
+export PREP_MODE=${PREP_MODE:-"no"} # nginx allow ip 가 dynamic 할 경우 (yes/no)
+export PREP_NODE_LIST_API=${PREP_NODE_LIST_API:-""} # prep node ip 들 확인하기 위한 URL
+export PREP_LISTEN_PORT=${PREP_LISTEN_PORT:-""} # prep mode 시 필수
+export PREP_PROXY_PASS_ENDPOINT=${PREP_PROXY_PASS_ENDPOINT:-""} # prep mode 시 필수
 export USE_DOCKERIZE=${USE_DOCKERIZE:-"yes"}  # go template 사용 여부 ( yes/no )
 export VIEW_CONFIG=${VIEW_CONFIG:-"no"}       # 시작시 config 출력 여부 ( yes/no )
 export UPSTREAM=${UPSTREAM:-"localhost:9000"} # upstream 설정 
@@ -67,6 +72,12 @@ export NGINX_RATE_LIMIT=${NGINX_RATE_LIMIT:-"100r/s"}   # rate limit 임계치
 export NGINX_BURST=${NGINX_BURST:-"10"}                 # rate limit을 초과시, 저장하는 최대 큐값 (10일 경우 limit을 넘어가는 11번째 부터 적용)
 export SET_REAL_IP_FROM=${SET_REAL_IP_FROM:-"0.0.0.0/0"}   # SET_REAL_IP_FROM
 
+## Nginx allow dynamic prep ip 설정
+if [ $PREP_MODE == "yes" ];
+then
+  sh /etc/nginx/policy/prepnode_reload.sh &
+  cron
+fi
 
 
 if [[ $NGINX_SET_NODELAY -eq "yes" ]];                  # rate limit 초과시 delay를 주는 옵션  (yes/no)
@@ -117,5 +128,7 @@ then
 fi
 
 print_w "START >> ${NGINX_VERSION}"
+
+echo $PREP_NODE_LIST_API > /etc/nginx/policy/.cron-env
 
 nginx

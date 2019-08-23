@@ -7,8 +7,13 @@ MAINTAINER JINWOO <jinwoo@theloop.co.kr>
 # Prepare the container
 #
 ENV TZ "Asia/Seoul"
+
+# Nginx allow Prep dynamic IP - cron Setting
+ADD ./policy/prepnode_ipscan_cron /etc/cron.d/prepnode_ipscan_cron
+RUN chmod 0644 /etc/cron.d/prepnode_ipscan_cron
+
 RUN echo $TZ > /etc/timezone && \
-    apt-get update && apt-get install -y tzdata && \
+    apt-get update && apt-get install -y tzdata inotify-tools jq cron && \
     rm /etc/localtime && \
     ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
     dpkg-reconfigure -f noninteractive tzdata && \
@@ -80,6 +85,9 @@ RUN userdel www-data && groupadd -r www-data -g ${USERID} && \
     chmod 700 /home/www-data && \
     chmod 711 /var/www && \
 	mkdir -p /etc/nginx/conf.d/
+
+# Nginx allow Prep IP conf file
+COPY policy /etc/nginx/policy/
 
 COPY files /
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 export USER_NGINX_ALLOWIP=${USER_NGINX_ALLOWIP:-"no"} # prep node IP 외 allow ip 추가 여부 (yes/no), yes 경우 해당경로/etc/nginx/user_conf 마운트 필수
 export PREP_MODE=${PREP_MODE:-"no"} # nginx allow ip 가 dynamic 할 경우 (yes/no)
-export PREP_NODE_LIST_API=${PREP_NODE_LIST_API:-""} # prep node ip 들 확인하기 위한 URL
+export PREP_NODE_LIST_API=${PREP_NODE_LIST_API:-""} # prep node ip check URL API (필수)
 export PREP_LISTEN_PORT=${PREP_LISTEN_PORT:-""} # prep mode 시 필수
 export PREP_PROXY_PASS_ENDPOINT=${PREP_PROXY_PASS_ENDPOINT:-""} # prep mode 시 필수
 export USE_DOCKERIZE=${USE_DOCKERIZE:-"yes"}  # go template 사용 여부 ( yes/no )

@@ -19,4 +19,4 @@ cat README_HEADER_TMP.md  > README.md
 echo "" >> README.md
 cat README_TAIL.md  >> README.md
 
-rm -f text1 text2 text3 README_HEADER_TMP.md README_TAIL.md
+rm -f text1 text2 text3 text4 README_HEADER_TMP.md README_TAIL.md

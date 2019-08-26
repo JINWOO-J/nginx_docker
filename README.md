@@ -11,10 +11,10 @@ Using nginx in reverse proxy mode prevents DDoS attacks by throttle setting and 
 The reverse proxy receives data from the internal server and sends it to the client. This prevents direct access to the internal server and acts as a relay for indirect access. The reverse proxy has many security advantages.
 
 ## nginx docker ENV settings
-###### made date at 2019-08-26 20:41:55 
+###### made date at 2019-08-26 20:48:02 
 | Environment variable | Description|Default value| Allowed value|
 |--------|--------|-------|-------|
- TRACKER\_IPLIST| Required for tracker to monitor prep|15.164.151.101 15.164.183.120 52.79.145.149 54.180.178.129; ||
+ TRACKER\_IPLIST| Required for tracker to monitor prep|15.164.151.101 15.164.183.120 52.79.145.149 54.180.178.129 ||
  PREP\_NGINX\_ALLOWIP| `no` :  Set allow come to anyone. `yes`: Set nginx allow ip to whitelist accessible IPs from P|no ||
  PREP\_MODE| PREP\_MODE mode whitelist based nginx usage|no |   (yes/no)|
  PREP\_NODE\_LIST\_API| In order to get prep's white ip list, ENDPOINT API URL (Required input)| ||

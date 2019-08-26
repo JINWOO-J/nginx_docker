@@ -8,7 +8,7 @@ TAGNAME = $(VERSION)
 
 .PHONY: all build push test tag_latest release ssh
 
-all: build
+all: build docs
 
 test:
 	echo $(VERSION)
@@ -58,6 +58,8 @@ init:
 		git commit -m "first commit"
 		git remote add origin git@repo.theloop.co.kr:jinwoo/$(NAME).git
 		git push -u origin master
-
 bash:
 	docker run -it --rm $(REPO_HUB)/$(NAME):$(TAGNAME) bash
+
+docs:
+	@$(shell ./makeMarkDown.sh)

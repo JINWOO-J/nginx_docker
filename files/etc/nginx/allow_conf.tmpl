@@ -1,0 +1,5 @@
+{{ range $ipaddr :=  split .Env.TRACKER_IPLIST " " }}
+    {{ if ne $ipaddr "" }}
+        {{ printf "allow %v;" $ipaddr }}
+    {{ end }}
+{{end}}

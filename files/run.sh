@@ -1,22 +1,25 @@
 #!/bin/bash
-export TRACKER_IPLIST=${TRACKER_IPLIST:-"allow 15.164.151.101;allow 15.164.183.120;allow 52.79.145.149;allow 54.180.178.129;"} # tracker 가 prep 모니터링을 위해 사용됨
-export PREP_NGINX_ALLOWIP=${PREP_NGINX_ALLOWIP:-"no"} # prep node IP 외 allow ip 추가 여부 (yes/no), yes 경우 해당경로/etc/nginx/user_conf 마운트 필수 & allow all 설정할 경우 no 로 설정
-export PREP_MODE=${PREP_MODE:-"no"} # nginx allow ip 가 dynamic 할 경우 (yes/no)
-export PREP_NODE_LIST_API=${PREP_NODE_LIST_API:-""} # prep node ip check URL API (필수)
-export PREP_LISTEN_PORT=${PREP_LISTEN_PORT:-""} # prep mode 시 필수
-export PREP_PROXY_PASS_ENDPOINT=${PREP_PROXY_PASS_ENDPOINT:-""} # prep mode 시 필수
-export USE_DOCKERIZE=${USE_DOCKERIZE:-"yes"}  # go template 사용 여부 ( yes/no )
-export VIEW_CONFIG=${VIEW_CONFIG:-"no"}       # 시작시 config 출력 여부 ( yes/no )
-export UPSTREAM=${UPSTREAM:-"localhost:9000"} # upstream 설정 
-export DOMAIN=${DOMAIN:-"localhost"}          # domain 설정
-export LOCATION=${LOCATION:-"#ADD_LOCATION"}  # location 설정
-export WEBROOT=${WEBROOT:-"/var/www/public"}  # webroot 설정
-export NGINX_EXTRACONF=${NGINX_EXTRACONF:-""} # 추가적인 conf 설정 
-export USE_DEFAULT_SERVER=${USE_DEFAULT_SERVER:-"no"}  # default 설정
-export USE_DEFAULT_SERVER_CONF=${USE_DEFAULT_SERVER_CONF:-""} # default 설정
-export NGINX_USER=${NGINX_USER:-"www-data"}  # nginx daemon user
+export TRACKER_IPLIST=${TRACKER_IPLIST:-"15.164.151.101 15.164.183.120 52.79.145.149 54.180.178.129"} # Required for tracker to monitor prep-node
+export PREP_NGINX_ALLOWIP=${PREP_NGINX_ALLOWIP:-"no"} # `no` :  Set allow come to anyone. `yes`: Set nginx allow ip to whitelist accessible IPs from P-Rep nodes,  if you want to add white IP address, you must mount to `/etc/nginx/user_conf`
+export PREP_MODE=${PREP_MODE:-"no"} # PREP_MODE mode whitelist based nginx usage #   (yes/no)
+export PREP_NODE_LIST_API=${PREP_NODE_LIST_API:-""} # In order to get prep's white ip list, ENDPOINT API URL (Required input)
+export PREP_LISTEN_PORT=${PREP_LISTEN_PORT:-""} # Choose a prep-node listen port  (Required input)
+export PREP_PROXY_PASS_ENDPOINT=${PREP_PROXY_PASS_ENDPOINT:-""} # prep's container name for RPC API  (if you selected `PREP_MODE`, Required input)
 
-export NUMBER_PROC=${NUMBER_PROC:-$(nproc)}  # worker_processes 수 ( 기본은 cpu 코어수 )
+export USE_DOCKERIZE=${USE_DOCKERIZE:-"yes"}  # `go template` usage ( yes/no )
+export VIEW_CONFIG=${VIEW_CONFIG:-"no"}       # Config print at launch ( yes/no )
+export UPSTREAM=${UPSTREAM:-"localhost:9000"} # upstream setting
+export DOMAIN=${DOMAIN:-"localhost"}          # domain setting
+export LOCATION=${LOCATION:-"#ADD_LOCATION"}  # additional location setting
+export WEBROOT=${WEBROOT:-"/var/www/public"}  # webroot setting
+export NGINX_EXTRACONF=${NGINX_EXTRACONF:-""} # additional conf settings
+export USE_DEFAULT_SERVER=${USE_DEFAULT_SERVER:-"no"}  # nginx's default conf setting
+export USE_DEFAULT_SERVER_CONF=${USE_DEFAULT_SERVER_CONF:-""} # nginx's default server conf setting
+export NGINX_USER=${NGINX_USER:-"www-data"}  # nginx daemon user
+export NGINX_SET_NODELAY=${NGINX_SET_NODELAY:-"no"}  # Delay option if rate limit is exceeded # ( yes/no )
+
+
+export NUMBER_PROC=${NUMBER_PROC:-$(nproc)}  # worker processes count  #  max number of processes
 export WORKER_CONNECTIONS=${WORKER_CONNECTIONS:-"4096"}  # WORKER_CONNECTIONS
 
 export LISTEN_PORT=${LISTEN_PORT:-"80"}      
@@ -40,10 +43,10 @@ export NGINX_LOG_TYPE=${NGINX_LOG_TYPE:-"default"}  # LOGTYPE (json/default)
 export NGINX_LOG_FORMAT=${NGINX_LOG_FORMAT:-""}   #  '$realip_remote_addr $remote_addr - $remote_user [$time_local] "$request" ' '$status $body_bytes_sent "$http_referer" ' '"$http_user_agent" "$http_x_forwarded_for"'
 export NGINX_LOG_OUTPUT=${NGINX_LOG_OUTPUT:-"file"} # stdout or file  or off
  
-export USE_VTS_STATUS=${USE_VTS_STATUS:-"yes"}   # vts monitoring
-export USE_NGINX_STATUS=${USE_NGINX_STATUS:-"yes"} # nginx_status 사용 여부
+export USE_VTS_STATUS=${USE_VTS_STATUS:-"yes"}   # vts monitoring usage    # (yes/no)
+export USE_NGINX_STATUS=${USE_NGINX_STATUS:-"yes"} # nginx status monitoring usage #(yes/no)
 export NGINX_STATUS_URI=${NGINX_STATUS_URI:-"nginx_status"} # nginx_status URI
-export NGINX_STATUS_URI_ALLOWIP=${NGINX_STATUS_URI_ALLOWIP:-"127.0.0.1"} # nginx_status URI 허용 아이피
+export NGINX_STATUS_URI_ALLOWIP=${NGINX_STATUS_URI_ALLOWIP:-"127.0.0.1"} # nginx_status URI is only allow requests from this IP address
 
 export USE_PHP_STATUS=${USE_PHP_STATUS:-"no"}
 export PHP_STATUS_URI=${PHP_STATUS_URI:-"php_status"}
@@ -56,21 +59,22 @@ export NGINX_LOG_OFF_URI=${NGINX_LOG_OFF_URI:-""}
 export NGINX_LOG_OFF_STATUS=${NGINX_LOG_OFF_STATUS:-""}
 
 # export NGINX_PROXY_CACHE_PATH=${NGINX_PROXY_CACHE_PATH:-""}
-export DEFAULT_EXT_LOCATION=${DEFAULT_EXT_LOCATION:-"php"}  # extension 설정  ~/.jsp ~/.php
+export DEFAULT_EXT_LOCATION=${DEFAULT_EXT_LOCATION:-"php"}  # extension setting  ~/.jsp ~/.php
 
-export PROXY_MODE=${PROXY_MODE:-"no"}   # Proxy mode 사용 여부 (yes/no)
-export GRPC_PROXY_MODE=${GRPC_PROXY_MODE:-"no"} # gRPC proxy mode 사용 여부 (yes/no)
+export PROXY_MODE=${PROXY_MODE:-"no"}   # gRPC proxy mode usage # (yes/no)
+export GRPC_PROXY_MODE=${GRPC_PROXY_MODE:-"no"} # gRPC proxy mode usage # (yes/no)
 
-export USE_NGINX_THROTTLE=${USE_NGINX_THROTTLE:-"no"} # rate limit 사용 여부  (yes/no)
+export USE_NGINX_THROTTLE=${USE_NGINX_THROTTLE:-"no"} # rate limit usage #  (yes/no)
 
-export NGINX_THROTTLE_BY_URI=${NGINX_THROTTLE_BY_URI:-"no"} # URI 기반의 rate limit 사용 여부  (yes/no)
-export NGINX_THROTTLE_BY_IP=${NGINX_THROTTLE_BY_IP:-"no"}  # IP 기반의 rate limit 사용 여부  (yes/no)
+export NGINX_THROTTLE_BY_URI=${NGINX_THROTTLE_BY_URI:-"no"} # URI based rate limit usage (yes/no)
+export NGINX_THROTTLE_BY_IP=${NGINX_THROTTLE_BY_IP:-"no"}  # IP based rate limit usage (yes/no)
 
-export PROXY_PASS_ENDPOINT=${PROXY_PASS_ENDPOINT:-""}     # proxy_pass 의 endpoint
+export PROXY_PASS_ENDPOINT=${PROXY_PASS_ENDPOINT:-""}     # Endpoint of RPC
 
-export NGINX_ZONE_MEMORY=${NGINX_ZONE_MEMORY:-"10m"}    #rate limit에 사용되는 저장소 크기
-export NGINX_RATE_LIMIT=${NGINX_RATE_LIMIT:-"100r/s"}   # rate limit 임계치
-export NGINX_BURST=${NGINX_BURST:-"10"}                 # rate limit을 초과시, 저장하는 최대 큐값 (10일 경우 limit을 넘어가는 11번째 부터 적용)
+export NGINX_ZONE_MEMORY=${NGINX_ZONE_MEMORY:-"10m"}    # Sets the shared memory zone for `rate limit`
+export NGINX_RATE_LIMIT=${NGINX_RATE_LIMIT:-"100r/s"}   # rate limiting value
+export NGINX_BURST=${NGINX_BURST:-"10"}                 #Excessive requests are delayed until their number exceeds the maximum burst size,  maximum queue value ( If the value is `10`, apply from `11`)
+
 export SET_REAL_IP_FROM=${SET_REAL_IP_FROM:-"0.0.0.0/0"}   # SET_REAL_IP_FROM
 
 ## Nginx allow dynamic prep ip 설정
@@ -81,7 +85,7 @@ then
 fi
 
 
-if [[ $NGINX_SET_NODELAY -eq "yes" ]];                  # rate limit 초과시 delay를 주는 옵션  (yes/no)
+if [[ $NGINX_SET_NODELAY -eq "yes" ]];
 then
     export NGINX_NODELAY="nodelay"
 else 
@@ -117,9 +121,10 @@ fi
 
 if [ $USE_DOCKERIZE == "yes" ];
 then
-    print_g "USE the dockerize template${NGINX_VERSION}"
+    print_g "USE the dockerize template - ${NGINX_VERSION}"
     dockerize -template /etc/nginx/default.tmpl | grep -ve '^ *$'  > /etc/nginx/sites-available/default.conf
     dockerize -template /etc/nginx/nginx_conf.tmpl | grep -ve '^ *$' > /etc/nginx/nginx.conf
+    dockerize -template /etc/nginx/allow_conf.tmpl | grep -ve '^ *$' > /etc/nginx/conf.d/tracker_IP.conf
 fi
 
 if [ $VIEW_CONFIG == "yes" ];
@@ -131,6 +136,5 @@ fi
 print_w "START >> ${NGINX_VERSION}"
 
 echo $PREP_NODE_LIST_API > /etc/nginx/policy/.cron-env
-echo $TRACKER_IPLIST > /etc/nginx/conf.d/tracker_IP.conf
 
 nginx

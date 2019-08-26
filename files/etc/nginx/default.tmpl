@@ -239,5 +239,19 @@ server {
     }
 {{ end }}
     {{ .Env.LOCATION }}
+
+{{ range $WEB_SOCKET_URI :=  split .Env.WEB_SOCKET_URIS " " }}
+    #websocket setting
+    location ~{{$WEB_SOCKET_URI}} {
+        proxy_pass http://_upstreamer;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'Upgrade';
+        proxy_read_timeout 1800s;
+    }
+{{end}}
+
 }
+
+
 {{ .Env.NGINX_EXTRACONF }}

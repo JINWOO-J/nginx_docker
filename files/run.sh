@@ -18,7 +18,7 @@ export USE_DEFAULT_SERVER_CONF=${USE_DEFAULT_SERVER_CONF:-""} # nginx's default 
 export NGINX_USER=${NGINX_USER:-"www-data"}  # nginx daemon user
 export NGINX_SET_NODELAY=${NGINX_SET_NODELAY:-"no"}  # Delay option if rate limit is exceeded # ( yes/no )
 
-
+export WEB_SOCKET_URIS=${WEB_SOCKET_URIS:-"/api/ws/* /api/node/*"}
 export NUMBER_PROC=${NUMBER_PROC:-$(nproc)}  # worker processes count  #  max number of processes
 export WORKER_CONNECTIONS=${WORKER_CONNECTIONS:-"4096"}  # WORKER_CONNECTIONS
 

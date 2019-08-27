@@ -3,7 +3,7 @@ export TRACKER_IPLIST=${TRACKER_IPLIST:-"15.164.151.101 15.164.183.120 52.79.145
 export PREP_NGINX_ALLOWIP=${PREP_NGINX_ALLOWIP:-"no"} # `no` :  Set allow come to anyone. `yes`: Set nginx allow ip to whitelist accessible IPs from P-Rep nodes,  if you want to add white IP address, you must mount to `/etc/nginx/user_conf`
 export PREP_MODE=${PREP_MODE:-"no"} # PREP_MODE mode whitelist based nginx usage #   (yes/no)
 export PREP_NODE_LIST_API=${PREP_NODE_LIST_API:-""} # In order to get prep's white ip list, ENDPOINT API URL (Required input)
-export PREP_LISTEN_PORT=${PREP_LISTEN_PORT:-""} # Choose a prep-node listen port  (Required input)
+export PREP_LISTEN_PORT=${PREP_LISTEN_PORT:-"9000"} # Choose a prep-node listen port  (Required input)
 export PREP_PROXY_PASS_ENDPOINT=${PREP_PROXY_PASS_ENDPOINT:-""} # prep's container name for RPC API  (if you selected `PREP_MODE`, Required input)
 
 export USE_DOCKERIZE=${USE_DOCKERIZE:-"yes"}  # `go template` usage ( yes/no )
@@ -23,11 +23,11 @@ export NUMBER_PROC=${NUMBER_PROC:-$(nproc)}  # worker processes count  #  max nu
 export WORKER_CONNECTIONS=${WORKER_CONNECTIONS:-"4096"}  # setting WORKER_CONNECTIONS
 
 export GRPC_LISTEN_PORT=${GRPC_LISTEN_PORT:-"7100"} # Used by gRPC Listen port
-export LISTEN_PORT=${LISTEN_PORT:-"80"}
+export LISTEN_PORT=${LISTEN_PORT:-"${GRPC_LISTEN_PORT}"}
 
-if [[ ! -z "${GRPC_LISTEN_PORT}" ]];
+if [[ -z "${LISTEN_PORT}" ]];
 then
-    export LISTEN_PORT=${GRPC_LISTEN_PORT}
+    export LISTEN_PORT=80
 fi
 
 export SENDFILE=${SENDFILE:-"on"}

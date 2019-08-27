@@ -18,11 +18,17 @@ export USE_DEFAULT_SERVER_CONF=${USE_DEFAULT_SERVER_CONF:-""} # nginx's default 
 export NGINX_USER=${NGINX_USER:-"www-data"}  # nginx daemon user
 export NGINX_SET_NODELAY=${NGINX_SET_NODELAY:-"no"}  # Delay option if rate limit is exceeded # ( yes/no )
 
-export WEB_SOCKET_URIS=${WEB_SOCKET_URIS:-"/api/ws/* /api/node/*"}
+export WEB_SOCKET_URIS=${WEB_SOCKET_URIS:-"/api/ws/* /api/node/*"} # URI for using nginx as a websocket proxy
 export NUMBER_PROC=${NUMBER_PROC:-$(nproc)}  # worker processes count  #  max number of processes
-export WORKER_CONNECTIONS=${WORKER_CONNECTIONS:-"4096"}  # WORKER_CONNECTIONS
+export WORKER_CONNECTIONS=${WORKER_CONNECTIONS:-"4096"}  # setting WORKER_CONNECTIONS
 
-export LISTEN_PORT=${LISTEN_PORT:-"80"}      
+export GRPC_LISTEN_PORT=${GRPC_LISTEN_PORT:-"7100"} # Used by gRPC Listen port
+export LISTEN_PORT=${LISTEN_PORT:-"80"}
+
+if [[ ! -z "${GRPC_LISTEN_PORT}" ]];
+then
+    export LISTEN_PORT=${GRPC_LISTEN_PORT}
+fi
 
 export SENDFILE=${SENDFILE:-"on"}
 export SERVER_TOKENS=${SERVER_TOKENS:-"off"}
@@ -39,9 +45,9 @@ export FASTCGI_READ_TIMEOUT=${FASTCGI_READ_TIMEOUT:-"60"}
 export FASTCGI_SEND_TIMEOUT=${FASTCGI_SEND_TIMEOUT:-"60"}
 export TYPES_HASH_MAX_SIZE=${TYPES_HASH_MAX_SIZE:-"2048"}
 
-export NGINX_LOG_TYPE=${NGINX_LOG_TYPE:-"default"}  # LOGTYPE (json/default)
+export NGINX_LOG_TYPE=${NGINX_LOG_TYPE:-"default"}  # output log format type #  (json/default)
 export NGINX_LOG_FORMAT=${NGINX_LOG_FORMAT:-""}   #  '$realip_remote_addr $remote_addr - $remote_user [$time_local] "$request" ' '$status $body_bytes_sent "$http_referer" ' '"$http_user_agent" "$http_x_forwarded_for"'
-export NGINX_LOG_OUTPUT=${NGINX_LOG_OUTPUT:-"file"} # stdout or file  or off
+export NGINX_LOG_OUTPUT=${NGINX_LOG_OUTPUT:-"file"} # output log type # stdout or file  or off
  
 export USE_VTS_STATUS=${USE_VTS_STATUS:-"yes"}   # vts monitoring usage    # (yes/no)
 export USE_NGINX_STATUS=${USE_NGINX_STATUS:-"yes"} # nginx status monitoring usage #(yes/no)
@@ -53,7 +59,7 @@ export PHP_STATUS_URI=${PHP_STATUS_URI:-"php_status"}
 export PHP_STATUS_URI_ALLOWIP=${PHP_STATUS_URI_ALLOWIP:-"127.0.0.1"}
 
 export PRIORTY_RULE=${PRIORTY_RULE:-"allow"}
-export NGINX_ALLOW_IP=${NGINX_ALLOW_IP:-""}    # ADMIN IP ADDR
+export NGINX_ALLOW_IP=${NGINX_ALLOW_IP:-""}    # Administrator IP addr for detail monitoring
 export NGINX_DENY_IP=${NGINX_DENY_IP:-""}
 export NGINX_LOG_OFF_URI=${NGINX_LOG_OFF_URI:-""}
 export NGINX_LOG_OFF_STATUS=${NGINX_LOG_OFF_STATUS:-""}
@@ -84,15 +90,14 @@ then
   cron
 fi
 
-
 if [[ $NGINX_SET_NODELAY -eq "yes" ]];
 then
     export NGINX_NODELAY="nodelay"
-else 
+else
     export NGINX_NODELAY=""
 fi
 
-export NGINX_PROXY_TIMEOUT=${NGINX_PROXY_TIMEOUT:-"90"}  
+export NGINX_PROXY_TIMEOUT=${NGINX_PROXY_TIMEOUT:-"90"}
 
 
 RESET='\e[0m'  # RESET

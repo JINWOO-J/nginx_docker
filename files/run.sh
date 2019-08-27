@@ -3,9 +3,9 @@ export TRACKER_IPLIST=${TRACKER_IPLIST:-"15.164.151.101 15.164.183.120 52.79.145
 export PREP_NGINX_ALLOWIP=${PREP_NGINX_ALLOWIP:-"no"} # `no` :  Set allow come to anyone. `yes`: Set nginx allow ip to whitelist accessible IPs from P-Rep nodes,  if you want to add white IP address, you must mount to `/etc/nginx/user_conf`
 export PREP_MODE=${PREP_MODE:-"no"} # PREP_MODE mode whitelist based nginx usage #   (yes/no)
 export NODE_CONTAINER_NAME=${NODE_CONTAINER_NAME:-"prep"} # container name in order to connect to prep-node
-export PREP_NODE_LIST_API=${PREP_NODE_LIST_API:-"${NODE_CONTAINER_NAME}/api/v3"} # In order to get prep's white ip list, ENDPOINT API URL (Required input)
 export PREP_LISTEN_PORT=${PREP_LISTEN_PORT:-"9000"} # Choose a prep-node listen port  (Required input)
 export PREP_PROXY_PASS_ENDPOINT=${PREP_PROXY_PASS_ENDPOINT:-"http://${NODE_CONTAINER_NAME}:9000"} # prep's container name for RPC API  (if you selected `PREP_MODE`, Required input)
+export PREP_NODE_LIST_API=${PREP_NODE_LIST_API:-"${PREP_PROXY_PASS_ENDPOINT}/api/v3"} # In order to get prep's white ip list, ENDPOINT API URL (Required input)
 
 export USE_DOCKERIZE=${USE_DOCKERIZE:-"yes"}  # `go template` usage ( yes/no )
 export VIEW_CONFIG=${VIEW_CONFIG:-"no"}       # Config print at launch ( yes/no )

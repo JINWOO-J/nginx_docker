@@ -1,5 +1,5 @@
 nginx:
-    image: 'jinwoo/nginx:1.15.0'
+    image: 'looploy/nginx:1.17.1
     environment:
         CLIENT_MAX_BODY_SIZE: '500M'
       #   DOMAIN: 'intra.dev.jinwoo.xyz'

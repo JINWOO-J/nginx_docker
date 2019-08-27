@@ -1,6 +1,6 @@
 nginx:
-    image: 'looploy/nginx:1.16.0'
-    container_name: nginx_1.16
+    image: looploy/nginx:1.17.1
+    container_name: nginx_throttle
     environment:
         NGINX_LOG_OUTPUT: 'file'
         NGINX_LOG_TYPE: 'main'

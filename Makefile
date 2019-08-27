@@ -1,5 +1,5 @@
 REPO = dr.yt.com
-REPO_HUB = jinwoo
+REPO_HUB = looploy
 NAME = nginx
 VERSION = 1.17.1
 TAGNAME = $(VERSION)
@@ -26,6 +26,8 @@ changeconfig:
 		 docker rm "$$CONTAINER_ID"
 
 build:
+		sed -i '' "s/$(REPO_HUB)\/$(NAME).*/$(REPO_HUB)\/$(NAME):$(VERSION)/g" docker-compose_grpc.yml
+		sed -i '' "s/$(REPO_HUB)\/$(NAME).*/$(REPO_HUB)\/$(NAME):$(VERSION)/g" docker-compose.yml
 		docker build --no-cache --rm=true --build-arg NGINX_VERSION=$(NAME)-$(VERSION) -t $(REPO_HUB)/$(NAME):$(TAGNAME) .
 
 push:

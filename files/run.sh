@@ -84,6 +84,8 @@ export NGINX_BURST=${NGINX_BURST:-"10"}                 #Excessive requests are 
 
 export SET_REAL_IP_FROM=${SET_REAL_IP_FROM:-"0.0.0.0/0"}   # SET_REAL_IP_FROM
 
+
+
 ## Nginx allow dynamic prep ip 설정
 if [ $PREP_MODE == "yes" ];
 then
@@ -142,5 +144,7 @@ fi
 print_w "START >> ${NGINX_VERSION}"
 
 echo $PREP_NODE_LIST_API > /etc/nginx/policy/.cron-env
+
+printenv | grep -v EXTRA | grep -v  LS_COLORS | grep -v '^_' | awk -F "=" '{print $1 "=" "\"" $2 "\"" }'> ./docker-envs
 
 nginx

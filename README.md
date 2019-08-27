@@ -67,15 +67,16 @@ $ docker-compose up -d
 
 
 ## nginx docker ENV settings
-###### made date at 2019-08-27 10:22:43 
+###### made date at 2019-08-27 11:18:36 
 | Environment variable | Description|Default value| Allowed value|
 |--------|--------|-------|-------|
  TRACKER\_IPLIST| Required for tracker to monitor prep|15.164.151.101 15.164.183.120 52.79.145.149 54.180.178.129 ||
  PREP\_NGINX\_ALLOWIP| `no` :  Set allow come to anyone. `yes`: Set nginx allow ip to whitelist accessible IPs from P|no ||
  PREP\_MODE| PREP\_MODE mode whitelist based nginx usage|no |   (yes/no)|
- PREP\_NODE\_LIST\_API| In order to get prep's white ip list, ENDPOINT API URL (Required input)| ||
+ NODE\_CONTAINER\_NAME| container name in order to connect to prep|prep ||
  PREP\_LISTEN\_PORT| Choose a prep|9000 ||
- PREP\_PROXY\_PASS\_ENDPOINT| prep's container name for RPC API  (if you selected `PREP\_MODE`, Required input)| ||
+ PREP\_PROXY\_PASS\_ENDPOINT| prep's container name for RPC API  (if you selected `PREP\_MODE`, Required input)|http||
+ PREP\_NODE\_LIST\_API| In order to get prep's white ip list, ENDPOINT API URL (Required input)|${PREP\_PROXY\_PASS\_ENDPOINT/api/v3 ||
  USE\_DOCKERIZE| `go template` usage ( yes/no )|yes  ||
  VIEW\_CONFIG| Config print at launch ( yes/no )|no       ||
  UPSTREAM| upstream setting|localhost||
@@ -127,7 +128,7 @@ $ docker-compose up -d
  USE\_NGINX\_THROTTLE| rate limit usage|no |  (yes/no)|
  NGINX\_THROTTLE\_BY\_URI| URI based rate limit usage (yes/no)|no ||
  NGINX\_THROTTLE\_BY\_IP| IP based rate limit usage (yes/no)|no  ||
- PROXY\_PASS\_ENDPOINT| Endpoint of RPC|     ||
+ PROXY\_PASS\_ENDPOINT| proxy endporint of gRPC|grpc||
  NGINX\_ZONE\_MEMORY| Sets the shared memory zone for `rate limit`|10m    ||
  NGINX\_RATE\_LIMIT| rate limiting value|100r/s   ||
  NGINX\_BURST|Excessive requests are delayed until their number exceeds the maximum burst size,  maximum queue value ( If the value is `10`, apply from `11`)|10                 ||

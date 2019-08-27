@@ -1,5 +1,5 @@
 #!/bin/bash
-
+. /docker-envs
 
 for IP in `curl -s ${PREP_NODE_LIST_API} -d '{"jsonrpc" : "2.0", "method": "rep_getList", "id": 1234 }' |jq '.' | awk '/target/' | awk -F: '{print$2}' | sed s/\"//g`
 do

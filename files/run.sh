@@ -2,9 +2,10 @@
 export TRACKER_IPLIST=${TRACKER_IPLIST:-"15.164.151.101 15.164.183.120 52.79.145.149 54.180.178.129"} # Required for tracker to monitor prep-node
 export PREP_NGINX_ALLOWIP=${PREP_NGINX_ALLOWIP:-"no"} # `no` :  Set allow come to anyone. `yes`: Set nginx allow ip to whitelist accessible IPs from P-Rep nodes,  if you want to add white IP address, you must mount to `/etc/nginx/user_conf`
 export PREP_MODE=${PREP_MODE:-"no"} # PREP_MODE mode whitelist based nginx usage #   (yes/no)
-export PREP_NODE_LIST_API=${PREP_NODE_LIST_API:-""} # In order to get prep's white ip list, ENDPOINT API URL (Required input)
+export NODE_CONTAINER_NAME=${NODE_CONTAINER_NAME:-"prep"} # container name in order to connect to prep-node
+export PREP_NODE_LIST_API=${PREP_NODE_LIST_API:-"${NODE_CONTAINER_NAME}/api/v3"} # In order to get prep's white ip list, ENDPOINT API URL (Required input)
 export PREP_LISTEN_PORT=${PREP_LISTEN_PORT:-"9000"} # Choose a prep-node listen port  (Required input)
-export PREP_PROXY_PASS_ENDPOINT=${PREP_PROXY_PASS_ENDPOINT:-""} # prep's container name for RPC API  (if you selected `PREP_MODE`, Required input)
+export PREP_PROXY_PASS_ENDPOINT=${PREP_PROXY_PASS_ENDPOINT:-"http://${NODE_CONTAINER_NAME}:9000"} # prep's container name for RPC API  (if you selected `PREP_MODE`, Required input)
 
 export USE_DOCKERIZE=${USE_DOCKERIZE:-"yes"}  # `go template` usage ( yes/no )
 export VIEW_CONFIG=${VIEW_CONFIG:-"no"}       # Config print at launch ( yes/no )
@@ -75,7 +76,7 @@ export USE_NGINX_THROTTLE=${USE_NGINX_THROTTLE:-"no"} # rate limit usage #  (yes
 export NGINX_THROTTLE_BY_URI=${NGINX_THROTTLE_BY_URI:-"no"} # URI based rate limit usage (yes/no)
 export NGINX_THROTTLE_BY_IP=${NGINX_THROTTLE_BY_IP:-"no"}  # IP based rate limit usage (yes/no)
 
-export PROXY_PASS_ENDPOINT=${PROXY_PASS_ENDPOINT:-""}     # Endpoint of RPC
+export PROXY_PASS_ENDPOINT=${PROXY_PASS_ENDPOINT:-"grpc://${NODE_CONTAINER_NAME}:7100"}     # proxy endporint of gRPC
 
 export NGINX_ZONE_MEMORY=${NGINX_ZONE_MEMORY:-"10m"}    # Sets the shared memory zone for `rate limit`
 export NGINX_RATE_LIMIT=${NGINX_RATE_LIMIT:-"100r/s"}   # rate limiting value

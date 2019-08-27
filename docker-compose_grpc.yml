@@ -13,13 +13,14 @@ nginx:
         NGINX_BURST: "5"
         GRPC_LISTEN_PORT: 7100
         GRPC_PROXY_MODE: "yes"
-        PROXY_PASS_ENDPOINT: "grpc://prep:7100"
+#        PROXY_PASS_ENDPOINT: "grpc://prep:7100"
         USE_VTS_STATUS: "yes"
         TZ: "GMT-9"
         PREP_MODE: "yes"
         PREP_LISTEN_PORT: 9000
-        PREP_PROXY_PASS_ENDPOINT: "http://prep:9000"
-        PREP_NODE_LIST_API: "prep:9000/api/v3"
+        NODE_CONTAINER_NAME: "prep"
+#        PREP_PROXY_PASS_ENDPOINT: "http://prep:9000"
+#        PREP_NODE_LIST_API: "prep:9000/api/v3"
         PREP_NGINX_ALLOWIP: "yes"
         NGINX_ALLOW_IP: "0.0.0.0/0"
 #        LOCATION: "location ~ /api/ws/* {proxy_pass http://_upstreamer;proxy_http_version 1.1;proxy_set_header Upgrade $$http_upgrade;proxy_set_header Connection 'Upgrade'; proxy_read_timeout 1800s;} location ~ /api/node/* {proxy_pass http://_upstreamer;proxy_http_version 1.1;proxy_set_header Upgrade $$http_upgrade;proxy_set_header Connection 'Upgrade'; proxy_read_timeout 1800s;} "

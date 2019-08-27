@@ -67,14 +67,14 @@ $ docker-compose up -d
 
 
 ## nginx docker ENV settings
-###### made date at 2019-08-26 21:11:22 
+###### made date at 2019-08-27 10:22:43 
 | Environment variable | Description|Default value| Allowed value|
 |--------|--------|-------|-------|
  TRACKER\_IPLIST| Required for tracker to monitor prep|15.164.151.101 15.164.183.120 52.79.145.149 54.180.178.129 ||
  PREP\_NGINX\_ALLOWIP| `no` :  Set allow come to anyone. `yes`: Set nginx allow ip to whitelist accessible IPs from P|no ||
  PREP\_MODE| PREP\_MODE mode whitelist based nginx usage|no |   (yes/no)|
  PREP\_NODE\_LIST\_API| In order to get prep's white ip list, ENDPOINT API URL (Required input)| ||
- PREP\_LISTEN\_PORT| Choose a prep| ||
+ PREP\_LISTEN\_PORT| Choose a prep|9000 ||
  PREP\_PROXY\_PASS\_ENDPOINT| prep's container name for RPC API  (if you selected `PREP\_MODE`, Required input)| ||
  USE\_DOCKERIZE| `go template` usage ( yes/no )|yes  ||
  VIEW\_CONFIG| Config print at launch ( yes/no )|no       ||
@@ -87,9 +87,11 @@ $ docker-compose up -d
  USE\_DEFAULT\_SERVER\_CONF| nginx's default server conf setting| ||
  NGINX\_USER|www|wwwdata  ||
  NGINX\_SET\_NODELAY| Delay option if rate limit is exceeded|no  | ( yes/no )|
+ WEB\_SOCKET\_URIS| URI for using nginx as a websocket proxy|/api/ws/* /api/node/* ||
  NUMBER\_PROC| worker processes count|$(nproc)  |  max number of processes|
- WORKER\_CONNECTIONS| WORKER\_CONNECTIONS|4096  ||
- LISTEN\_PORT|80|80      ||
+ WORKER\_CONNECTIONS| setting WORKER\_CONNECTIONS|4096  ||
+ GRPC\_LISTEN\_PORT| Used by gRPC Listen port|7100 ||
+ LISTEN\_PORT|${GRPC\_LISTEN\_PORT}|${GRPC\_LISTEN\_PORT||
  SENDFILE|on|on||
  SERVER\_TOKENS|off|off||
  KEEPALIVE\_TIMEOUT|65|65||
@@ -104,9 +106,9 @@ $ docker-compose up -d
  FASTCGI\_READ\_TIMEOUT|60|60||
  FASTCGI\_SEND\_TIMEOUT|60|60||
  TYPES\_HASH\_MAX\_SIZE|2048|2048||
- NGINX\_LOG\_TYPE| LOGTYPE (json/default)|default  ||
+ NGINX\_LOG\_TYPE| output log format type|default  |  (json/default)|
  NGINX\_LOG\_FORMAT|  '$realip\_remote\_addr $remote\_addr|   ||
- NGINX\_LOG\_OUTPUT| stdout or file  or off|file ||
+ NGINX\_LOG\_OUTPUT| output log type|file | stdout or file  or off|
  USE\_VTS\_STATUS| vts monitoring usage|yes   | (yes/no)|
  USE\_NGINX\_STATUS| nginx status monitoring usage|yes |(yes/no)|
  NGINX\_STATUS\_URI| nginx\_status URI|nginx\_status ||
@@ -115,7 +117,7 @@ $ docker-compose up -d
  PHP\_STATUS\_URI|php\_status|php\_status||
  PHP\_STATUS\_URI\_ALLOWIP|127.0.0.1|127.0.0.1||
  PRIORTY\_RULE|allow|allow||
- NGINX\_ALLOW\_IP| ADMIN IP ADDR|    ||
+ NGINX\_ALLOW\_IP| Administrator IP addr for detail monitoring|    ||
  NGINX\_DENY\_IP||||
  NGINX\_LOG\_OFF\_URI||||
  NGINX\_LOG\_OFF\_STATUS||||
@@ -130,4 +132,4 @@ $ docker-compose up -d
  NGINX\_RATE\_LIMIT| rate limiting value|100r/s   ||
  NGINX\_BURST|Excessive requests are delayed until their number exceeds the maximum burst size,  maximum queue value ( If the value is `10`, apply from `11`)|10                 ||
  SET\_REAL\_IP\_FROM| SET\_REAL\_IP\_FROM|0.0.0.0/0   ||
- NGINX\_PROXY\_TIMEOUT|90|90  ||
+ NGINX\_PROXY\_TIMEOUT|90|90||

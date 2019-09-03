@@ -6,7 +6,7 @@ services:
       cap_add:
          - SYS_TIME
       environment:
-         LOOPCHAIN_LOG_LEVEL: "DBUG"
+         LOOPCHAIN_LOG_LEVEL: "DEBUG"
          DEFAULT_PATH: "/data/loopchain"
          LOG_OUTPUT_TYPE: "file|console"
          LOAD_PEERS_FROM_IISS: "true"

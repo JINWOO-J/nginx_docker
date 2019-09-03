@@ -1,5 +1,11 @@
 # nginx docker 
 
+## Introduction to nginx_docker
+This project was created to help ICON's PRep-node.
+P-Rep node operator should have methods to enhance security.
+Setting throttle by using Nginx as Reserve Proxy, P-Reps can protect its network from DDoS attack and able to build a White IP list based network.
+
+
 
 ## Introduction to Nginx
 Nginx is a web server that optimizes security and speed that consists of one master process and several worker processes.
@@ -25,32 +31,45 @@ $ make
 Open docker-compose.yml in a text editor and add the following content:
 
 ```yaml
-nginx:
-    image: 'looploy/nginx:1.16.0'
-    container_name: nginx_1.16
-    environment:
-        NGINX_LOG_OUTPUT: 'file'
-        NGINX_LOG_TYPE: 'main'
-        NGINX_USER: 'root'
-        VIEW_CONFIG: "yes"
-        PROXY_MODE: "yes"
-        USE_NGINX_THROTTLE: "yes"
-        # NGINX_THROTTLE_BY_URI: "yes"
-        NGINX_RATE_LIMIT: "200r/s"
-        NGINX_BURST: "5"
-        LISTEN_PORT: 7100
-        GRPC_PROXY_MODE: "yes"
-        PROXY_PASS_ENDPOINT: "grpc://prep:7100"
-        USE_VTS_STATUS: "yes"
-        TZ: "GMT-9"
-        PREP_MODE: "yes"
-        PREP_LISTEN_PORT: 9000
-        PREP_PROXY_PASS_ENDPOINT: "http://prep:9000"
-        PREP_NODE_LIST_API: "prep:9000/api/v3"
-        PREP_NGINX_ALLOWIP: "yes"
-        NGINX_ALLOW_IP: "0.0.0.0/0"
-        LOCATION: "location ~ /api/ws/* {proxy_pass http://_upstreamer;proxy_http_version 1.1;proxy_set_header Upgrade $$http_upgrade;proxy_set_header Connection 'Upgrade'; proxy_read_timeout 1800s;} location ~ /api/node/* {proxy_pass http://_upstreamer;proxy_http_version 1.1;proxy_set_header Upgrade $$http_upgrade;proxy_set_header Connection 'Upgrade'; proxy_read_timeout 1800s;} "
-        NGINX_LOG_FORMAT: '$$realip_remote_addr $$remote_addr  $$remote_user [$$time_local] $$request $$status $$body_bytes_sent $$http_referer "$$http_user_agent" $$http_x_forwarded_for $$request_body'
+version: '3'
+services:
+   prep:
+      image: 'iconloop/prep-node:1907091410x2f8b2e'
+      container_name: prep
+      cap_add:
+         - SYS_TIME
+      environment:
+         LOOPCHAIN_LOG_LEVEL: "DEBUG"
+         DEFAULT_PATH: "/data/loopchain"
+         LOG_OUTPUT_TYPE: "file|console"
+         LOAD_PEERS_FROM_IISS: "true"
+         ENDPOINT_URL: "https://zicon.net.solidwallet.io"
+         FIND_NEIGHBOR: "true"
+      volumes:
+         - ./data:/data
+
+   nginx_throttle:
+      image: 'looploy/nginx:1.171.1'
+      container_name: nginx_1.17
+      environment:
+         NGINX_LOG_OUTPUT: 'file'
+         NGINX_LOG_TYPE: 'main'
+         NGINX_USER: 'root'
+         VIEW_CONFIG: "yes"
+         USE_NGINX_THROTTLE: "yes"
+         NGINX_THROTTLE_BY_URI: "yes"
+         NGINX_RATE_LIMIT: "200r/s"
+         NGINX_BURST: "5"
+         NGINX_SET_NODELAY: "no"
+         GRPC_PROXY_MODE: "yes"
+         USE_VTS_STATUS: "yes"
+         TZ: "GMT-9"
+         SET_REAL_IP_FROM: "0.0.0.0/0"
+         PREP_MODE: "yes"
+         NODE_CONTAINER_NAME: "prep"
+         PREP_NGINX_ALLOWIP: "yes"
+         NGINX_ALLOW_IP: "0.0.0.0/0"
+         NGINX_LOG_FORMAT: '$$realip_remote_addr $$remote_addr  $$remote_user [$$time_local] $$request $$status $$body_bytes_sent $$http_referer "$$http_user_agent" $$http_x_forwarded_for $$request_body'
       volumes:
          - ./data/loopchain/nginx:/var/log/nginx
          - ./user_conf:/etc/nginx/user_conf

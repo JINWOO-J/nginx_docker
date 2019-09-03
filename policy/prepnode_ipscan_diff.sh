@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 function check_valid_ip(){
     local  ip=$1

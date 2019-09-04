@@ -12,6 +12,7 @@ ENV TZ "Asia/Seoul"
 ADD ./policy/prepnode_ipscan_cron /etc/cron.d/prepnode_ipscan_cron
 RUN chmod 0644 /etc/cron.d/prepnode_ipscan_cron
 
+RUN sed -i 's/archive.ubuntu.com/ftp.daum.net/g' /etc/apt/sources.list
 RUN echo $TZ > /etc/timezone && \
     apt-get update && apt-get install -y tzdata inotify-tools jq cron && \
     rm /etc/localtime && \

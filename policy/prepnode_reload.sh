@@ -2,9 +2,9 @@
 #. /docker-envs
 source /docker-envs
 
-repshash=`curl -s ${PREP_NODE_LIST_API} -d '{ "jsonrpc" : "2.0", "method": "icx_getBlock", "id": 1234}' | jq '.result.repsHash'`
+IPLIST=`curl -d '{"jsonrpc": "2.0", "method": "icx_call", "id": 1234, "params": {"from": "hx0000000000000000000000000000000000000000", "to": "cx0000000000000000000000000000000000000000", "dataType": "call", "data": {"method": "getPRepTerm"}}}' ${PREP_LIST_API} |jq '.result.preps[].p2pEndpoint' | sed s/\"//g | sed s/:7100//g`
 
-for IP in `curl -s ${PREP_NODE_LIST_API} -d '{"jsonrpc" : "2.0", "method": "rep_getListByHash", "id": 1234, "params": {"repsHash": '${repshash}'}}' |jq '.result[].p2pEndpoint' | sed s/\"//g | awk -F: '{print$1}'`
+for IP in $IPLIST
 do
    echo "allow $IP;" >> /etc/nginx/conf.d/prepnode_allowips.conf
 done

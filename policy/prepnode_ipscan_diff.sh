@@ -16,10 +16,10 @@ function check_valid_ip(){
 }
 
 PREP_LIST_API=`cat /etc/nginx/policy/.cron-env`
-repshash=`curl -s ${PREP_LIST_API} -d '{ "jsonrpc" : "2.0", "method": "icx_getBlock", "id": 1234}' | jq '.result.repsHash'`
 
 true > /etc/nginx/policy/prepnode_dynamicips_check.conf
-IPLIST=`curl -s ${PREP_LIST_API} -d '{"jsonrpc" : "2.0", "method": "rep_getListByHash", "id": 1234, "params": {"repsHash": '${repshash}'}}' |jq '.result[].p2pEndpoint' | sed s/\"//g | awk -F: '{print$1}'`
+
+IPLIST=`curl -d '{"jsonrpc": "2.0", "method": "icx_call", "id": 1234, "params": {"from": "hx0000000000000000000000000000000000000000", "to": "cx0000000000000000000000000000000000000000", "dataType": "call", "data": {"method": "getPRepTerm"}}}' ${PREP_LIST_API} |jq '.result.preps[].p2pEndpoint' | sed s/\"//g | sed s/:7100//g`
 
 for IP in $IPLIST
 do

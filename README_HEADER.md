@@ -49,7 +49,7 @@ services:
          - ./data:/data
 
    nginx_throttle:
-      image: 'looploy/nginx:1.171.1'
+      image: 'looploy/nginx:1.17.1'
       container_name: nginx_1.17
       environment:
          NGINX_LOG_OUTPUT: 'file'

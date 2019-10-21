@@ -49,7 +49,7 @@ services:
          - ./data:/data
 
    nginx_throttle:
-      image: 'looploy/nginx:1.171.1'
+      image: 'looploy/nginx:1.17.1'
       container_name: nginx_1.17
       environment:
          NGINX_LOG_OUTPUT: 'file'
@@ -86,7 +86,7 @@ $ docker-compose up -d
 
 
 ## nginx docker ENV settings
-###### made date at 2019-09-03 10:41:11 
+###### made date at 2019-10-21 20:11:35 
 | Environment variable | Description|Default value| Allowed value|
 |--------|--------|-------|-------|
  TRACKER\_IPLIST| Required for tracker to monitor prep|15.164.151.101 15.164.183.120 52.79.145.149 54.180.178.129 ||

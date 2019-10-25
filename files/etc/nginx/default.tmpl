@@ -52,7 +52,7 @@ server {
     }
 
     #websocket setting
-    location /api/ws/* {
+    location ~/api/ws/* {
         proxy_pass {{.Env.PREP_PROXY_PASS_ENDPOINT}};
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
@@ -60,7 +60,7 @@ server {
         proxy_read_timeout 1800s;
     }
 
-    location /api/node/*{
+    location ~/api/node/*{
         proxy_pass {{.Env.PREP_PROXY_PASS_ENDPOINT}};
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;

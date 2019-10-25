@@ -1,0 +1,5 @@
+{{ range $ipaddr :=  split .Env.ENDPOINT_IPLIST " " }}
+    {{ if ne $ipaddr "" }}
+        {{ printf "allow %v;" $ipaddr }}
+    {{ end }}
+{{end}}

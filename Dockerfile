@@ -55,7 +55,8 @@ ENV NGINX_BUILD_DEPS bzip2 \
         libpcre3 \
         tmux \
         vim \
-        runit
+        runit \
+        iproute
 
 ENV NGINX_EXTRA_BUILD_DEPS gcc make pkg-config  \
                             libbz2-dev \

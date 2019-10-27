@@ -7,7 +7,8 @@ export NODE_CONTAINER_NAME=${NODE_CONTAINER_NAME:-"prep"} # container name in or
 export PREP_LISTEN_PORT=${PREP_LISTEN_PORT:-"9000"} # Choose a prep-node listen port  (Required input)
 export PREP_PROXY_PASS_ENDPOINT=${PREP_PROXY_PASS_ENDPOINT:-"http://${NODE_CONTAINER_NAME}:9000"} # prep's container name for RPC API  (if you selected `PREP_MODE`, Required input)
 export PREP_NODE_LIST_API=${PREP_NODE_LIST_API:-"${PREP_PROXY_PASS_ENDPOINT}/api/v3"} # In order to get prep's white ip list, ENDPOINT API URL (Required input)
-
+export CONTAINER_GW=${CONTAINER_GW:-`ip route | grep default | awk '{print $3}'`} #get container gateway, Required to call loopback # container's gateway IP
+ENDPOINT_IPLIST="${ENDPOINT_IPLIST} ${CONTAINER_GW}"
 export USE_DOCKERIZE=${USE_DOCKERIZE:-"yes"}  # `go template` usage ( yes/no )
 export VIEW_CONFIG=${VIEW_CONFIG:-"no"}       # Config print at launch ( yes/no )
 export UPSTREAM=${UPSTREAM:-"localhost:9000"} # upstream setting

@@ -86,16 +86,18 @@ $ docker-compose up -d
 
 
 ## nginx docker ENV settings
-###### made date at 2019-10-21 20:11:35 
+###### made date at 2019-11-04 19:58:45 
 | Environment variable | Description|Default value| Allowed value|
 |--------|--------|-------|-------|
  TRACKER\_IPLIST| Required for tracker to monitor prep|15.164.151.101 15.164.183.120 52.79.145.149 54.180.178.129 ||
+ ENDPOINT\_IPLIST|18.176.140.116 3.115.235.90 15.164.9.144 52.79.53.18 100.20.198.12 100.21.153.11 3.232.240.113 35.173.107.66 18.162.69.96 18.162.80.224 18.140.251.111 18.141.27.125 58.234.156.141 58.234.156.140|18.176.140.116 3.115.235.90 15.164.9.144 52.79.53.18 100.20.198.12 100.21.153.11 3.232.240.113 35.173.107.66 18.162.69.96 18.162.80.224 18.140.251.111 18.141.27.125 58.234.156.141 58.234.156.140||
  PREP\_NGINX\_ALLOWIP| `no` :  Set allow come to anyone. `yes`: Set nginx allow ip to whitelist accessible IPs from P|no ||
  PREP\_MODE| PREP\_MODE mode whitelist based nginx usage|no |   (yes/no)|
  NODE\_CONTAINER\_NAME| container name in order to connect to prep|prep ||
  PREP\_LISTEN\_PORT| Choose a prep|9000 ||
  PREP\_PROXY\_PASS\_ENDPOINT| prep's container name for RPC API  (if you selected `PREP\_MODE`, Required input)|http||
  PREP\_NODE\_LIST\_API| In order to get prep's white ip list, ENDPOINT API URL (Required input)|${PREP\_PROXY\_PASS\_ENDPOINT/api/v3 ||
+ CONTAINER\_GW|get container gateway, Required to call loopback|`ip route | grep default | awk '{print $3'` | container's gateway IP|
  USE\_DOCKERIZE| `go template` usage ( yes/no )|yes  ||
  VIEW\_CONFIG| Config print at launch ( yes/no )|no       ||
  UPSTREAM| upstream setting|localhost||

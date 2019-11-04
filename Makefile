@@ -5,6 +5,13 @@ VERSION = 1.17.1
 TAGNAME = $(VERSION)
 #include ENVAR
 
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Linux)
+	SED_OPTION = 
+endif
+ifeq ($(UNAME_S),Darwin)
+	SED_OPTION = ''
+endif
 
 .PHONY: all build push test tag_latest release ssh
 
@@ -25,10 +32,10 @@ changeconfig:
 		 echo "CLEAN UP [$$CONTAINER_ID]" ;\
 		 docker rm "$$CONTAINER_ID"
 
-build:
-		sed -i '' "s/$(REPO_HUB)\/$(NAME).*/$(REPO_HUB)\/$(NAME):$(VERSION)/g" docker-compose_grpc.yml
-		sed -i '' "s/$(REPO_HUB)\/$(NAME).*/$(REPO_HUB)\/$(NAME):$(VERSION)/g" docker-compose.yml
-		docker build --no-cache --rm=true --build-arg NGINX_VERSION=$(NAME)-$(VERSION) -t $(REPO_HUB)/$(NAME):$(TAGNAME) .
+build:		
+		sed -i $(SED_OPTION) "s/$(REPO_HUB)\/$(NAME).*/$(REPO_HUB)\/$(NAME):$(VERSION)/g" docker-compose_grpc.yml
+		sed -i $(SED_OPTION) "s/$(REPO_HUB)\/$(NAME).*/$(REPO_HUB)\/$(NAME):$(VERSION)/g" docker-compose.yml
+		# docker build --no-cache --rm=true --build-arg NGINX_VERSION=$(NAME)-$(VERSION) -t $(REPO_HUB)/$(NAME):$(TAGNAME) .
 
 push:
 		# docker tag  $(NAME):$(VERSION) $(REPO)/$(NAME):$(TAGNAME)

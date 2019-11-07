@@ -86,7 +86,7 @@ $ docker-compose up -d
 
 
 ## nginx docker ENV settings
-###### made date at 2019-11-04 19:58:45 
+###### made date at 2019-11-07 10:11:31 
 | Environment variable | Description|Default value| Allowed value|
 |--------|--------|-------|-------|
  TRACKER\_IPLIST| Required for tracker to monitor prep|15.164.151.101 15.164.183.120 52.79.145.149 54.180.178.129 ||

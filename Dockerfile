@@ -1,8 +1,8 @@
 #
 # - Base nginx
 #
-FROM ubuntu:16.04
-MAINTAINER JINWOO <jinwoo@theloop.co.kr>
+FROM ubuntu:18.04
+LABEL maintainer="JINWOO <jinwoo@iconloop.com>"
 #
 # Prepare the container
 #
@@ -20,6 +20,8 @@ RUN echo $TZ > /etc/timezone && \
     dpkg-reconfigure -f noninteractive tzdata && \
     apt-get clean
 
+ARG DEBUG_BUILD
+ENV DEBUG_BUILD $DEBUG_BUILD
 ARG NGINX_VERSION
 ENV NGINX_VERSION $NGINX_VERSION
 RUN echo $NGINX_VERSION
@@ -56,7 +58,8 @@ ENV NGINX_BUILD_DEPS bzip2 \
         tmux \
         vim \
         runit \
-        iproute
+        iproute2 \
+        gnupg
 
 ENV NGINX_EXTRA_BUILD_DEPS gcc make pkg-config  \
                             libbz2-dev \

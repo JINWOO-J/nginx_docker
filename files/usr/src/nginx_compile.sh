@@ -15,16 +15,18 @@ function PrintOK() {
 
     if [ ${CHECK} == 0 ];
     then
-        printf "${IGreen} [OK] ${CHECK}  ${MSG} ${RESET} \n"
+        printf "${IGreen} [OK] ${MSG} ret=${CHECK} ${RESET} \n"
     else
-        printf "${IRed} [FAIL] ${CHECK}  ${MSG} ${RESET} \n"
+        printf "${IRed} [FAIL] ${MSG} ret=${CHECK} ${RESET} \n"
         printf "${IRed} [FAIL] Stopped script ${RESET} \n"
-        exit 0;
+        exit 127;
     fi
 }
 DEBUG_BUILD=${DEBUG_BUILD:-"no"}
+print_w "DEBUG_BUILD = ${DEBUG_BUILD}"
 if [ $DEBUG_BUILD == "yes" ];
 then
+
     set -x
 fi
 

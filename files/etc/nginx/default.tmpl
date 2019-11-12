@@ -60,14 +60,6 @@ server {
         proxy_read_timeout 1800s;
     }
 
-    location ~/api/node/*{
-        proxy_pass {{.Env.PREP_PROXY_PASS_ENDPOINT}};
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'Upgrade';
-        proxy_read_timeout 1800s;
-    }
-
 {{ if eq .Env.USE_VTS_STATUS "yes" }}
     location /vts_status {
         vhost_traffic_status_display;

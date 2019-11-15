@@ -36,6 +36,8 @@ server {
             {{ if eq .Env.NGINX_THROTTLE_BY_URI "yes" }}
         limit_req zone=by_uri burst={{.Env.NGINX_BURST}} {{.Env.NGINX_NODELAY}};
             {{ end }}
+        error_page 503 =503;
+        error_log /var/log/nginx/Rate_Limit-error.log;
         {{ end }}
         {{ if eq .Env.PREP_NGINX_ALLOWIP "yes" }}
         include /etc/nginx/conf.d/*.conf;
@@ -128,6 +130,8 @@ server {
             {{ if eq .Env.NGINX_THROTTLE_BY_URI "yes" }}
         limit_req zone=by_uri burst={{.Env.NGINX_BURST}} {{.Env.NGINX_NODELAY}};
             {{ end }}            
+        error_page 503 =503;
+        error_log /var/log/nginx/Rate_Limit-error.log;
         {{ end }}
 
         {{  if eq .Env.PRIORTY_RULE "deny" }}
@@ -150,6 +154,8 @@ server {
         {{ end }}
 
         grpc_pass {{.Env.PROXY_PASS_ENDPOINT}};
+        if ($server_protocol ~ "HTTP/2.0") {
+           access_log /var/log/nginx/http2-access.log main; }
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         grpc_read_timeout {{.Env.NGINX_PROXY_TIMEOUT}};

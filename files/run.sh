@@ -87,6 +87,15 @@ export NGINX_BURST=${NGINX_BURST:-"10"}                 #Excessive requests are 
 export SET_REAL_IP_FROM=${SET_REAL_IP_FROM:-"0.0.0.0/0"}   # SET_REAL_IP_FROM
 
 
+RED='\033[0;31m'
+NOCOLOR="\033[0m"
+
+## waiting for prep before nginx start
+while ! dockerize -wait tcp://$NODE_CONTAINER_NAME:9000; do
+  >&2 echo -e "${RED}Waiting for Prep Node${NOCOLOR}"
+  sleep 1
+done
+
 
 ## Nginx allow dynamic prep ip 설정
 if [ $PREP_MODE == "yes" ];

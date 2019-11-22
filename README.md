@@ -56,7 +56,7 @@ services:
          NGINX_LOG_TYPE: 'main'
          NGINX_USER: 'root'
          VIEW_CONFIG: "yes"
-         USE_NGINX_THROTTLE: "yes"
+         USE_NGINX_THROTTLE: "no"   ## DDos (throttle) use = "yes" change
          NGINX_THROTTLE_BY_URI: "yes"
          NGINX_RATE_LIMIT: "200r/s"
          NGINX_BURST: "5"
@@ -67,7 +67,7 @@ services:
          SET_REAL_IP_FROM: "0.0.0.0/0"
          PREP_MODE: "yes"
          NODE_CONTAINER_NAME: "prep"
-         PREP_NGINX_ALLOWIP: "yes"
+         PREP_NGINX_ALLOWIP: "no"   ## whitelist use = "yes" change
          NGINX_ALLOW_IP: "0.0.0.0/0"
          NGINX_LOG_FORMAT: '$$realip_remote_addr $$remote_addr  $$remote_user [$$time_local] $$request $$status $$body_bytes_sent $$http_referer "$$http_user_agent" $$http_x_forwarded_for $$request_body'
       volumes:
@@ -86,11 +86,11 @@ $ docker-compose up -d
 
 
 ## nginx docker ENV settings
-###### made date at 2019-11-07 10:11:31 
+###### made date at 2019-11-22 11:53:00 
 | Environment variable | Description|Default value| Allowed value|
 |--------|--------|-------|-------|
  TRACKER\_IPLIST| Required for tracker to monitor prep|15.164.151.101 15.164.183.120 52.79.145.149 54.180.178.129 ||
- ENDPOINT\_IPLIST|18.176.140.116 3.115.235.90 15.164.9.144 52.79.53.18 100.20.198.12 100.21.153.11 3.232.240.113 35.173.107.66 18.162.69.96 18.162.80.224 18.140.251.111 18.141.27.125 58.234.156.141 58.234.156.140|18.176.140.116 3.115.235.90 15.164.9.144 52.79.53.18 100.20.198.12 100.21.153.11 3.232.240.113 35.173.107.66 18.162.69.96 18.162.80.224 18.140.251.111 18.141.27.125 58.234.156.141 58.234.156.140||
+ ENDPOINT\_IPLIST|18.176.140.116 3.115.235.90 15.164.9.144 52.79.53.18 100.20.198.12 100.21.153.11 3.232.240.113 35.173.107.66 18.162.69.96 18.162.80.224 18.140.251.111 18.141.27.125 58.234.156.141 58.234.156.140 210.180.69.103|18.176.140.116 3.115.235.90 15.164.9.144 52.79.53.18 100.20.198.12 100.21.153.11 3.232.240.113 35.173.107.66 18.162.69.96 18.162.80.224 18.140.251.111 18.141.27.125 58.234.156.141 58.234.156.140 210.180.69.103||
  PREP\_NGINX\_ALLOWIP| `no` :  Set allow come to anyone. `yes`: Set nginx allow ip to whitelist accessible IPs from P|no ||
  PREP\_MODE| PREP\_MODE mode whitelist based nginx usage|no |   (yes/no)|
  NODE\_CONTAINER\_NAME| container name in order to connect to prep|prep ||

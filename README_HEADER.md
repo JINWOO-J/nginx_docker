@@ -56,7 +56,7 @@ services:
          NGINX_LOG_TYPE: 'main'
          NGINX_USER: 'root'
          VIEW_CONFIG: "yes"
-         USE_NGINX_THROTTLE: "yes"
+         USE_NGINX_THROTTLE: "no"   ## DDos (throttle) use = "yes" change
          NGINX_THROTTLE_BY_URI: "yes"
          NGINX_RATE_LIMIT: "200r/s"
          NGINX_BURST: "5"
@@ -67,7 +67,7 @@ services:
          SET_REAL_IP_FROM: "0.0.0.0/0"
          PREP_MODE: "yes"
          NODE_CONTAINER_NAME: "prep"
-         PREP_NGINX_ALLOWIP: "yes"
+         PREP_NGINX_ALLOWIP: "no"   ## whitelist use = "yes" change
          NGINX_ALLOW_IP: "0.0.0.0/0"
          NGINX_LOG_FORMAT: '$$realip_remote_addr $$remote_addr  $$remote_user [$$time_local] $$request $$status $$body_bytes_sent $$http_referer "$$http_user_agent" $$http_x_forwarded_for $$request_body'
       volumes:

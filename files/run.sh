@@ -92,7 +92,7 @@ NOCOLOR="\033[0m"
 
 ## waiting for prep before nginx start
 while ! dockerize -wait tcp://$NODE_CONTAINER_NAME:9000; do
-  >&2 echo -e "${RED}Waiting for Prep Node${NOCOLOR}"
+  >&2 echo -e "${RED}Waiting for $NODE_CONTAINER_NAME ${NOCOLOR}"
   sleep 1
 done
 

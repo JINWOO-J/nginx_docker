@@ -36,8 +36,7 @@ server {
             {{ if eq .Env.NGINX_THROTTLE_BY_URI "yes" }}
         limit_req zone=by_uri burst={{.Env.NGINX_BURST}} {{.Env.NGINX_NODELAY}};
             {{ end }}
-        error_page 503 =503;
-        error_log /var/log/nginx/Rate_Limit-error.log;
+        error_log /var/log/nginx/bad_Limit-error.log;
         {{ end }}
         {{ if eq .Env.PREP_NGINX_ALLOWIP "yes" }}
         include /etc/nginx/conf.d/*.conf;
@@ -130,8 +129,7 @@ server {
             {{ if eq .Env.NGINX_THROTTLE_BY_URI "yes" }}
         limit_req zone=by_uri burst={{.Env.NGINX_BURST}} {{.Env.NGINX_NODELAY}};
             {{ end }}            
-        error_page 503 =503;
-        error_log /var/log/nginx/Rate_Limit-error.log;
+        error_log /var/log/nginx/bad_Limit-error.log;
         {{ end }}
 
         {{  if eq .Env.PRIORTY_RULE "deny" }}

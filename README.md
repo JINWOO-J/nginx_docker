@@ -86,7 +86,7 @@ $ docker-compose up -d
 
 
 ## nginx docker ENV settings
-###### made date at 2019-11-22 11:53:00 
+###### made date at 2019-11-27 14:40:40 
 | Environment variable | Description|Default value| Allowed value|
 |--------|--------|-------|-------|
  TRACKER\_IPLIST| Required for tracker to monitor prep|15.164.151.101 15.164.183.120 52.79.145.149 54.180.178.129 ||
@@ -131,6 +131,7 @@ $ docker-compose up -d
  NGINX\_LOG\_TYPE| output log format type|default  |  (json/default)|
  NGINX\_LOG\_FORMAT|  '$realip\_remote\_addr $remote\_addr|   ||
  NGINX\_LOG\_OUTPUT| output log type|file | stdout or file  or off|
+ NGINX\_LOG\_OPTION| for json logging option|escape=none | escape=json, escape=none|
  USE\_VTS\_STATUS| vts monitoring usage|yes   | (yes/no)|
  USE\_NGINX\_STATUS| nginx status monitoring usage|yes |(yes/no)|
  NGINX\_STATUS\_URI| nginx\_status URI|nginx\_status ||
@@ -149,6 +150,7 @@ $ docker-compose up -d
  USE\_NGINX\_THROTTLE| rate limit usage|no |  (yes/no)|
  NGINX\_THROTTLE\_BY\_URI| URI based rate limit usage (yes/no)|no ||
  NGINX\_THROTTLE\_BY\_IP| IP based rate limit usage (yes/no)|no  ||
+ NGINX\_THROTTLE\_BY\_IP\_VAR| IP variable to be used for rate limit|'$http\_true\_client\_ip' ||
  PROXY\_PASS\_ENDPOINT| proxy endporint of gRPC|grpc||
  NGINX\_ZONE\_MEMORY| Sets the shared memory zone for `rate limit`|10m    ||
  NGINX\_RATE\_LIMIT| rate limiting value|100r/s   ||

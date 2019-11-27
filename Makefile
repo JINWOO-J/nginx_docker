@@ -99,7 +99,7 @@ init:
 		git remote add origin git@repo.theloop.co.kr:jinwoo/$(NAME).git
 		git push -u origin master
 bash:
-	docker run -it --rm $(REPO_HUB)/$(NAME):$(TAGNAME) bash
+	docker run -e NODE_CONTAINER_NAME=20.20.4.90 -p 9000:9000 -p 7100:7100  -it --rm $(REPO_HUB)/$(NAME):$(TAGNAME) bash
 
 docs:
 	@$(shell ./makeMarkDown.sh)

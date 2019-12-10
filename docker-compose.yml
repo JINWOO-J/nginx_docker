@@ -25,7 +25,8 @@ services:
          NGINX_USER: 'root'
          VIEW_CONFIG: "yes"
          USE_NGINX_THROTTLE: "no" ## throthle use = yes change
-         NGINX_THROTTLE_BY_URI: "yes"
+         NGINX_THROTTLE_BY_IP: "yes"
+         NGINX_THROTTLE_BY_IP_VAR: "$$binary_remote_addr"
          NGINX_RATE_LIMIT: "200r/s"
          NGINX_BURST: "5"
          NGINX_SET_NODELAY: "no"

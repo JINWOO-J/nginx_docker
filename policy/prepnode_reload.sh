@@ -1,6 +1,7 @@
 #!/bin/bash
 #. /docker-envs
 source /docker-envs
+PREP_LIST_API=`cat /etc/nginx/policy/.cron-env`
 
 IPLIST=`curl -d '{"jsonrpc": "2.0", "method": "icx_call", "id": 1234, "params": {"from": "hx0000000000000000000000000000000000000000", "to": "cx0000000000000000000000000000000000000000", "dataType": "call", "data": {"method": "getPRepTerm"}}}' ${PREP_LIST_API} |jq '.result.preps[].p2pEndpoint' | sed s/\"//g | sed s/:7100//g`
 

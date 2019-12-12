@@ -52,13 +52,14 @@ http {
 
 {{ if eq .Env.USE_NGINX_THROTTLE "yes" }}    
     # $binary_remote_addr
-    limit_req_zone $http_true_client_ip zone=by_ip:{{.Env.NGINX_ZONE_MEMORY}} rate={{.Env.NGINX_RATE_LIMIT}};
+    # limit_req_zone $http_true_client_ip zone=by_ip:{{.Env.NGINX_ZONE_MEMORY}} rate={{.Env.NGINX_RATE_LIMIT}};
+    limit_req_zone {{.Env.NGINX_THROTTLE_BY_IP_VAR}} zone=by_ip:{{.Env.NGINX_ZONE_MEMORY}} rate={{.Env.NGINX_RATE_LIMIT}};
     limit_req_zone $request_uri zone=by_uri:{{.Env.NGINX_ZONE_MEMORY}} rate={{.Env.NGINX_RATE_LIMIT}};
 {{ end }}
 
 
 {{ if gt (len .Env.NGINX_LOG_FORMAT)  0 }}
-    log_format main '{{ .Env.NGINX_LOG_FORMAT}}';
+    log_format main {{.Env.NGINX_LOG_OPTION}} '{{ .Env.NGINX_LOG_FORMAT}}';
 {{ else if eq .Env.NGINX_LOG_TYPE "json" }}
     log_format main '{'
     '"type": "nginx", '
@@ -81,7 +82,7 @@ http {
     '}'
     '}';
 {{ else }}
-    log_format main '$realip_remote_addr $remote_addr - $remote_user [$time_local] "$request" '
+    log_format main {{.Env.NGINX_LOG_OPTION}} '$realip_remote_addr $remote_addr - $remote_user [$time_local] "$request" '
                      '$status $body_bytes_sent "$http_referer" '
                      '"$http_user_agent" "$http_x_forwarded_for"';
 {{ end }}

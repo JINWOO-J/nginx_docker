@@ -7,6 +7,7 @@ export NODE_CONTAINER_NAME=${NODE_CONTAINER_NAME:-"prep"} # container name in or
 export PREP_LISTEN_PORT=${PREP_LISTEN_PORT:-"9000"} # Choose a prep-node listen port  (Required input)
 export PREP_PROXY_PASS_ENDPOINT=${PREP_PROXY_PASS_ENDPOINT:-"http://${NODE_CONTAINER_NAME}:9000"} # prep's container name for RPC API  (if you selected `PREP_MODE`, Required input)
 export PREP_NODE_LIST_API=${PREP_NODE_LIST_API:-"${PREP_PROXY_PASS_ENDPOINT}/api/v3"} # In order to get prep's white ip list, ENDPOINT API URL (Required input)
+export PREP_AVAIL_API=${PREP_AVAIL_API:-"http://localhost:9000/api/v1/status/peer"}
 export CONTAINER_GW=${CONTAINER_GW:-`ip route | grep default | awk '{print $3}'`} #get container gateway, Required to call loopback # container's gateway IP
 ENDPOINT_IPLIST="${ENDPOINT_IPLIST} ${CONTAINER_GW}"
 export USE_DOCKERIZE=${USE_DOCKERIZE:-"yes"}  # `go template` usage ( yes/no )
@@ -51,7 +52,7 @@ export TYPES_HASH_MAX_SIZE=${TYPES_HASH_MAX_SIZE:-"2048"}
 export NGINX_LOG_TYPE=${NGINX_LOG_TYPE:-"default"}  # output log format type #  (json/default)
 export NGINX_LOG_FORMAT=${NGINX_LOG_FORMAT:-""}   #  '$realip_remote_addr $remote_addr - $remote_user [$time_local] "$request" ' '$status $body_bytes_sent "$http_referer" ' '"$http_user_agent" "$http_x_forwarded_for"'
 export NGINX_LOG_OUTPUT=${NGINX_LOG_OUTPUT:-"file"} # output log type # stdout or file  or off
- 
+export NGINX_LOG_OPTION=${NGINX_LOG_OPTION:-"escape=none"} # for json logging option # escape=json, escape=none
 export USE_VTS_STATUS=${USE_VTS_STATUS:-"yes"}   # vts monitoring usage    # (yes/no)
 export USE_NGINX_STATUS=${USE_NGINX_STATUS:-"yes"} # nginx status monitoring usage #(yes/no)
 export NGINX_STATUS_URI=${NGINX_STATUS_URI:-"nginx_status"} # nginx_status URI
@@ -77,6 +78,7 @@ export USE_NGINX_THROTTLE=${USE_NGINX_THROTTLE:-"no"} # rate limit usage #  (yes
 
 export NGINX_THROTTLE_BY_URI=${NGINX_THROTTLE_BY_URI:-"no"} # URI based rate limit usage (yes/no)
 export NGINX_THROTTLE_BY_IP=${NGINX_THROTTLE_BY_IP:-"no"}  # IP based rate limit usage (yes/no)
+export NGINX_THROTTLE_BY_IP_VAR=${NGINX_THROTTLE_BY_IP_VAR:-'$http_true_client_ip'} # IP variable to be used for rate limit
 
 export PROXY_PASS_ENDPOINT=${PROXY_PASS_ENDPOINT:-"grpc://${NODE_CONTAINER_NAME}:7100"}     # proxy endporint of gRPC
 
@@ -156,6 +158,7 @@ fi
 print_w "START >> ${NGINX_VERSION}"
 
 echo $PREP_NODE_LIST_API > /etc/nginx/policy/.cron-env
+echo $PREP_AVAIL_API > /etc/nginx/policy/.cron-env-avail
 
 printenv | grep -v EXTRA | grep -v  LS_COLORS | grep -v '^_' | awk -F "=" '{print $1 "=" "\"" $2 "\"" }'> ./docker-envs
 

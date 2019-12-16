@@ -72,7 +72,7 @@ services:
          NGINX_LOG_FORMAT: '$$realip_remote_addr $$remote_addr  $$remote_user [$$time_local] $$request $$status $$body_bytes_sent $$http_referer "$$http_user_agent" $$http_x_forwarded_for $$request_body'
       volumes:
          - ./data/loopchain/nginx:/var/log/nginx
-         - ./user_conf:/etc/nginx/user_conf
+         - ./manual_acl:/etc/nginx/manual_acl
       ports:
          - '7100:7100'
          - '9000:9000'

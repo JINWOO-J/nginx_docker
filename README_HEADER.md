@@ -33,32 +33,42 @@ Open docker-compose.yml in a text editor and add the following content:
 ```yaml
 version: '3'
 services:
-   prep:
-      image: 'iconloop/prep-node:1907091410x2f8b2e'
-      container_name: prep
+   prep-node:
+      image: 'iconloop/prep-node:1912090356xb1e1fe-dev'
+      container_name: prep-node
+      restart: "always"
+      environment:
+         LOOPCHAIN_LOG_LEVEL: "SPAM"
+         ICON_LOG_LEVEL: "DEBUG"
+         DEFAULT_PATH: "/data/loopchain"
+         LOG_OUTPUT_TYPE: "file"
+         PRIVATE_PATH: "/cert/{==YOUR_KEYSTORE or YOUR_CERTKEY FILENAME==}"
+         PRIVATE_PASSWORD: "{==YOUR_KEY_PASSWORD==}"
+         CERT_PATH: "/cert"
+         SERVICE: "zicon"
+         FASTEST_START: "yes"
+         SWITCH_BH_VERSION4: 1587271
       cap_add:
          - SYS_TIME
-      environment:
-         LOOPCHAIN_LOG_LEVEL: "DEBUG"
-         DEFAULT_PATH: "/data/loopchain"
-         LOG_OUTPUT_TYPE: "file|console"
-         LOAD_PEERS_FROM_IISS: "true"
-         ENDPOINT_URL: "https://zicon.net.solidwallet.io"
-         FIND_NEIGHBOR: "true"
       volumes:
          - ./data:/data
+         - ./cert:/cert:ro
+
 
    nginx_throttle:
-      image: 'looploy/nginx:1.17.1'
-      container_name: nginx_1.17
+      image: 'looploy/nginx:1.17.1-1a'
+      container_name: nginx_throttle
+      restart: "always"
       environment:
          NGINX_LOG_OUTPUT: 'file'
          NGINX_LOG_TYPE: 'main'
          NGINX_USER: 'root'
          VIEW_CONFIG: "yes"
-         USE_NGINX_THROTTLE: "no"   ## DDos (throttle) use = "yes" change
-         NGINX_THROTTLE_BY_URI: "yes"
-         NGINX_RATE_LIMIT: "200r/s"
+         USE_NGINX_THROTTLE: "yes"
+         NGINX_THROTTLE_BY_IP_VAR: "$$binary_remote_addr"
+         NGINX_THROTTLE_BY_URI: "no"
+         NGINX_THROTTLE_BY_IP: "yes"
+         NGINX_RATE_LIMIT: "700r/s"
          NGINX_BURST: "5"
          NGINX_SET_NODELAY: "no"
          GRPC_PROXY_MODE: "yes"
@@ -66,16 +76,19 @@ services:
          TZ: "GMT-9"
          SET_REAL_IP_FROM: "0.0.0.0/0"
          PREP_MODE: "yes"
-         NODE_CONTAINER_NAME: "prep"
-         PREP_NGINX_ALLOWIP: "no"   ## whitelist use = "yes" change
+         NODE_CONTAINER_NAME: "prep-node"
+         PREP_NGINX_ALLOWIP: "no"
+         #PREP_NODE_LIST_API: "https://zicon.net.solidwallet/api/v3"
          NGINX_ALLOW_IP: "0.0.0.0/0"
-         NGINX_LOG_FORMAT: '$$realip_remote_addr $$remote_addr  $$remote_user [$$time_local] $$request $$status $$body_bytes_sent $$http_referer "$$http_user_agent" $$http_x_forwarded_for $$request_body'
+         NGINX_LOG_FORMAT: '$$realip_remote_addr $$remote_addr  $$remote_user [$$time_local] $$request $$status $$body_bytes_sent $$http_referer "$$http_user_agent" $$http_x_forwarded_for $$request_body $$server_protocol $$request_time'
       volumes:
          - ./data/loopchain/nginx:/var/log/nginx
-         - ./user_conf:/etc/nginx/user_conf
+         - ./manual_acl:/etc/nginx/manual_acl
       ports:
          - '7100:7100'
          - '9000:9000'
+
+
 ```
 
 run docker-compose

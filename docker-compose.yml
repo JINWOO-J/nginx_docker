@@ -5,8 +5,6 @@ services:
       container_name: prep-node
       cap_add:
          - SYS_TIME
-      image: 'iconloop/prep-node:1911121115x323d60'
-      container_name: "prep"
       restart: "always"
       environment:
          LOOPCHAIN_LOG_LEVEL: "SPAM"
@@ -18,9 +16,6 @@ services:
          CERT_PATH: "/cert"
          SERVICE: "zicon"
          FASTEST_START: "yes"
-      volumes:
-         - ./data:/data
-         - ./cert:/cert
       cap_add:
          - SYS_TIME
       volumes:

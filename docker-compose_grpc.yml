@@ -1,5 +1,5 @@
 nginx:
-    image: looploy/nginx:1.17.1
+    image: looploy/nginx:1.17.1-a
     container_name: nginx_throttle
     environment:
         NGINX_LOG_OUTPUT: 'file'
@@ -9,7 +9,7 @@ nginx:
         PROXY_MODE: "yes"
         USE_NGINX_THROTTLE: "yes"
         # NGINX_THROTTLE_BY_URI: "yes"
-        NGINX_RATE_LIMIT: "200r/s"
+        NGINX_RATE_LIMIT: "700r/s"
         NGINX_BURST: "5"
         GRPC_LISTEN_PORT: 7100
         GRPC_PROXY_MODE: "yes"

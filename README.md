@@ -33,9 +33,9 @@ Open docker-compose.yml in a text editor and add the following content:
 ```yaml
 version: '3'
 services:
-   prep-node:
+   prep:
       image: 'iconloop/prep-node:1912090356xb1e1fe-dev'
-      container_name: prep-node
+      container_name: prep
       restart: "always"
       environment:
          LOOPCHAIN_LOG_LEVEL: "SPAM"
@@ -76,7 +76,7 @@ services:
          TZ: "GMT-9"
          SET_REAL_IP_FROM: "0.0.0.0/0"
          PREP_MODE: "yes"
-         NODE_CONTAINER_NAME: "prep-node"
+         NODE_CONTAINER_NAME: "prep"
          PREP_NGINX_ALLOWIP: "no"
          #PREP_NODE_LIST_API: "https://zicon.net.solidwallet/api/v3"
          NGINX_ALLOW_IP: "0.0.0.0/0"
@@ -99,7 +99,7 @@ $ docker-compose up -d
 
 
 ## nginx docker ENV settings
-###### made date at 2019-12-17 13:40:48 
+###### made date at 2019-12-17 13:48:40 
 | Environment variable | Description|Default value| Allowed value|
 |--------|--------|-------|-------|
  TRACKER\_IPLIST| Required for tracker to monitor prep|15.164.151.101 15.164.183.120 52.79.145.149 54.180.178.129 ||

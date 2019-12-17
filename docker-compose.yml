@@ -3,8 +3,6 @@ services:
    prep-node:
       image: 'iconloop/prep-node:1912090356xb1e1fe-dev'
       container_name: prep-node
-      cap_add:
-         - SYS_TIME
       restart: "always"
       environment:
          LOOPCHAIN_LOG_LEVEL: "SPAM"

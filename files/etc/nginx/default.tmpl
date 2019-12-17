@@ -40,7 +40,7 @@ server {
         {{ end }}
         {{ if eq .Env.PREP_NGINX_ALLOWIP "yes" }}
         include /etc/nginx/conf.d/*.conf;
-        include /etc/nginx/user_conf/*.conf;
+        include /etc/nginx/manual_acl/*.conf;
         deny all;
         {{ end }}
         {{ if eq .Env.PREP_NGINX_ALLOWIP "no" }}
@@ -143,7 +143,7 @@ server {
         {{ end }}        
 
         {{ if eq .Env.PREP_NGINX_ALLOWIP "yes" }}
-        include /etc/nginx/user_conf/*.conf;
+        include /etc/nginx/manual_acl/*.conf;
         include /etc/nginx/conf.d/*.conf;
         deny all;
         {{ end }}

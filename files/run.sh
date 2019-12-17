@@ -1,12 +1,13 @@
 #!/bin/bash
 export TRACKER_IPLIST=${TRACKER_IPLIST:-"15.164.151.101 15.164.183.120 52.79.145.149 54.180.178.129"} # Required for tracker to monitor prep-node
 export ENDPOINT_IPLIST=${ENDPOINT_IPLIST:-"18.176.140.116 3.115.235.90 15.164.9.144 52.79.53.18 100.20.198.12 100.21.153.11 3.232.240.113 35.173.107.66 18.162.69.96 18.162.80.224 18.140.251.111 18.141.27.125 58.234.156.141 58.234.156.140 210.180.69.103"}
-export PREP_NGINX_ALLOWIP=${PREP_NGINX_ALLOWIP:-"no"} # `no` :  Set allow come to anyone. `yes`: Set nginx allow ip to whitelist accessible IPs from P-Rep nodes,  if you want to add white IP address, you must mount to `/etc/nginx/user_conf`
+export PREP_NGINX_ALLOWIP=${PREP_NGINX_ALLOWIP:-"no"} # `no` :  Set allow come to anyone. `yes`: Set nginx allow ip to whitelist accessible IPs from P-Rep nodes,  if you want to add white IP address, you must mount to `/etc/nginx/manual_acl`
 export PREP_MODE=${PREP_MODE:-"no"} # PREP_MODE mode whitelist based nginx usage #   (yes/no)
 export NODE_CONTAINER_NAME=${NODE_CONTAINER_NAME:-"prep"} # container name in order to connect to prep-node
 export PREP_LISTEN_PORT=${PREP_LISTEN_PORT:-"9000"} # Choose a prep-node listen port  (Required input)
 export PREP_PROXY_PASS_ENDPOINT=${PREP_PROXY_PASS_ENDPOINT:-"http://${NODE_CONTAINER_NAME}:9000"} # prep's container name for RPC API  (if you selected `PREP_MODE`, Required input)
 export PREP_NODE_LIST_API=${PREP_NODE_LIST_API:-"${PREP_PROXY_PASS_ENDPOINT}/api/v3"} # In order to get prep's white ip list, ENDPOINT API URL (Required input)
+export PREP_AVAIL_API=${PREP_AVAIL_API:-"http://localhost:9000/api/v1/status/peer"}
 export CONTAINER_GW=${CONTAINER_GW:-`ip route | grep default | awk '{print $3}'`} #get container gateway, Required to call loopback # container's gateway IP
 ENDPOINT_IPLIST="${ENDPOINT_IPLIST} ${CONTAINER_GW}"
 export USE_DOCKERIZE=${USE_DOCKERIZE:-"yes"}  # `go template` usage ( yes/no )
@@ -157,6 +158,7 @@ fi
 print_w "START >> ${NGINX_VERSION}"
 
 echo $PREP_NODE_LIST_API > /etc/nginx/policy/.cron-env
+echo $PREP_AVAIL_API > /etc/nginx/policy/.cron-env-avail
 
 printenv | grep -v EXTRA | grep -v  LS_COLORS | grep -v '^_' | awk -F "=" '{print $1 "=" "\"" $2 "\"" }'> ./docker-envs
 

@@ -1,25 +1,18 @@
 version: '3'
 services:
    prep:
-<<<<<<< HEAD
       image: 'iconloop/prep-node:1912090356xb1e1fe-dev'
       container_name: prep
       cap_add:
          - SYS_TIME
-=======
       image: 'iconloop/prep-node:1911121115x323d60'
       container_name: "prep"
       restart: "always"
->>>>>>> 207db6a9a133fd21d6e83b19eab0bb8ea49c3ec6
       environment:
          LOOPCHAIN_LOG_LEVEL: "SPAM"
          ICON_LOG_LEVEL: "DEBUG"
          DEFAULT_PATH: "/data/loopchain"
-         LOG_OUTPUT_TYPE: "file|console"
-<<<<<<< HEAD
-         LOAD_PEERS_FROM_IISS: "true"
-         ENDPOINT_URL: "https://zicon.net.solidwallet.io"
-         FIND_NEIGHBOR: "true"
+         LOG_OUTPUT_TYPE: "file"
          PRIVATE_PATH: "/cert/{==YOUR_KEYSTORE or YOUR_CERTKEY FILENAME==}"
          PRIVATE_PASSWORD: "{==YOUR_KEY_PASSWORD==}"
          CERT_PATH: "/cert"
@@ -27,7 +20,6 @@ services:
       volumes:
          - ./data:/data
          - ./cert:/cert
-=======
          FASTEST_START: "yes"
          CERT_PATH: "/cert"
          PRIVATE_KEY_FILENAME: "YOUR KEY NAME"
@@ -38,10 +30,9 @@ services:
          - ./data:/data
          - ./cert:/cert:ro
 
->>>>>>> 207db6a9a133fd21d6e83b19eab0bb8ea49c3ec6
 
    nginx_throttle:
-      image: looploy/nginx:1.17.1-1a
+      image: 'looploy/nginx:1.17.1-1a'
       container_name: nginx_throttle
       restart: "always"
       environment:
@@ -49,19 +40,11 @@ services:
          NGINX_LOG_TYPE: 'main'
          NGINX_USER: 'root'
          VIEW_CONFIG: "yes"
-<<<<<<< HEAD
          USE_NGINX_THROTTLE: "yes"
          NGINX_THROTTLE_BY_IP_VAR: "$$binary_remote_addr"
          NGINX_THROTTLE_BY_URI: "no"
          NGINX_THROTTLE_BY_IP: "yes"
          NGINX_RATE_LIMIT: "700r/s"
-=======
-         USE_NGINX_THROTTLE: "no" ## throthle use = yes change
-         NGINX_THROTTLE_BY_IP_VAR: "$$binary_remote_addr"
-         NGINX_THROTTLE_BY_URI: "yes"
-         NGINX_THROTTLE_BY_IP: "yes"
-         NGINX_RATE_LIMIT: "200r/s"
->>>>>>> 207db6a9a133fd21d6e83b19eab0bb8ea49c3ec6
          NGINX_BURST: "5"
          NGINX_SET_NODELAY: "no"
          GRPC_PROXY_MODE: "yes"
@@ -69,14 +52,9 @@ services:
          TZ: "GMT-9"
          SET_REAL_IP_FROM: "0.0.0.0/0"
          PREP_MODE: "yes"
-<<<<<<< HEAD
          NODE_CONTAINER_NAME: "prep-node"
          PREP_NGINX_ALLOWIP: "no"
          #PREP_NODE_LIST_API: "https://zicon.net.solidwallet/api/v3"
-=======
-         NODE_CONTAINER_NAME: "prep"
-         PREP_NGINX_ALLOWIP: "no"  ## whiltlist user = yes change
->>>>>>> 207db6a9a133fd21d6e83b19eab0bb8ea49c3ec6
          NGINX_ALLOW_IP: "0.0.0.0/0"
          NGINX_LOG_FORMAT: '$$realip_remote_addr $$remote_addr  $$remote_user [$$time_local] $$request $$status $$body_bytes_sent $$http_referer "$$http_user_agent" $$http_x_forwarded_for $$request_body $$server_protocol $$request_time'
       volumes:
@@ -85,7 +63,3 @@ services:
       ports:
          - '7100:7100'
          - '9000:9000'
-<<<<<<< HEAD
-
-=======
->>>>>>> 207db6a9a133fd21d6e83b19eab0bb8ea49c3ec6

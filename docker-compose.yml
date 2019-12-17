@@ -14,6 +14,7 @@ services:
          CERT_PATH: "/cert"
          SERVICE: "zicon"
          FASTEST_START: "yes"
+         SWITCH_BH_VERSION4: 1587271
       cap_add:
          - SYS_TIME
       volumes:

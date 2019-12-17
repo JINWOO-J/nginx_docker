@@ -33,25 +33,30 @@ Open docker-compose.yml in a text editor and add the following content:
 ```yaml
 version: '3'
 services:
-   prep:
+   prep-node:
       image: 'iconloop/prep-node:1912090356xb1e1fe-dev'
-      container_name: prep
-      cap_add:
-         - SYS_TIME
+      container_name: prep-node
+      restart: "always"
       environment:
-         LOOPCHAIN_LOG_LEVEL: "DEBUG"
+         LOOPCHAIN_LOG_LEVEL: "SPAM"
+         ICON_LOG_LEVEL: "DEBUG"
          DEFAULT_PATH: "/data/loopchain"
          LOG_OUTPUT_TYPE: "file"
-         PRIVATE_PATH: "/cert/{YOUR_KEYSTORE or YOUR_CERTKEY FILENAME}"
-         PRIVATE_PASSWORD: "{YOUR_KEY_PASSWORD}"
+         PRIVATE_PATH: "/cert/{==YOUR_KEYSTORE or YOUR_CERTKEY FILENAME==}"
+         PRIVATE_PASSWORD: "{==YOUR_KEY_PASSWORD==}"
          CERT_PATH: "/cert"
          SERVICE: "zicon"
+         FASTEST_START: "yes"
+         SWITCH_BH_VERSION4: 1587271
+      cap_add:
+         - SYS_TIME
       volumes:
          - ./data:/data
-         - ./cert:/cert
+         - ./cert:/cert:ro
+
 
    nginx_throttle:
-      image: looploy/nginx:1.17.1-1a
+      image: 'looploy/nginx:1.17.1-1a'
       container_name: nginx_throttle
       restart: "always"
       environment:

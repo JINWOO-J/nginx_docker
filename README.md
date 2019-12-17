@@ -33,25 +33,30 @@ Open docker-compose.yml in a text editor and add the following content:
 ```yaml
 version: '3'
 services:
-   prep:
+   prep-node:
       image: 'iconloop/prep-node:1912090356xb1e1fe-dev'
-      container_name: prep
-      cap_add:
-         - SYS_TIME
+      container_name: prep-node
+      restart: "always"
       environment:
-         LOOPCHAIN_LOG_LEVEL: "DEBUG"
+         LOOPCHAIN_LOG_LEVEL: "SPAM"
+         ICON_LOG_LEVEL: "DEBUG"
          DEFAULT_PATH: "/data/loopchain"
          LOG_OUTPUT_TYPE: "file"
-         PRIVATE_PATH: "/cert/{YOUR_KEYSTORE or YOUR_CERTKEY FILENAME}"
-         PRIVATE_PASSWORD: "{YOUR_KEY_PASSWORD}"
+         PRIVATE_PATH: "/cert/{==YOUR_KEYSTORE or YOUR_CERTKEY FILENAME==}"
+         PRIVATE_PASSWORD: "{==YOUR_KEY_PASSWORD==}"
          CERT_PATH: "/cert"
          SERVICE: "zicon"
+         FASTEST_START: "yes"
+         SWITCH_BH_VERSION4: 1587271
+      cap_add:
+         - SYS_TIME
       volumes:
          - ./data:/data
-         - ./cert:/cert
+         - ./cert:/cert:ro
+
 
    nginx_throttle:
-      image: looploy/nginx:1.17.1-1a
+      image: 'looploy/nginx:1.17.1-1a'
       container_name: nginx_throttle
       restart: "always"
       environment:
@@ -94,7 +99,7 @@ $ docker-compose up -d
 
 
 ## nginx docker ENV settings
-###### made date at 2019-12-17 13:32:44 
+###### made date at 2019-12-17 13:40:48 
 | Environment variable | Description|Default value| Allowed value|
 |--------|--------|-------|-------|
  TRACKER\_IPLIST| Required for tracker to monitor prep|15.164.151.101 15.164.183.120 52.79.145.149 54.180.178.129 ||
@@ -105,6 +110,7 @@ $ docker-compose up -d
  PREP\_LISTEN\_PORT| Choose a prep|9000 ||
  PREP\_PROXY\_PASS\_ENDPOINT| prep's container name for RPC API  (if you selected `PREP\_MODE`, Required input)|http||
  PREP\_NODE\_LIST\_API| In order to get prep's white ip list, ENDPOINT API URL (Required input)|${PREP\_PROXY\_PASS\_ENDPOINT/api/v3 ||
+ PREP\_AVAIL\_API|http://localhost:9000/api/v1/status/peer|http||
  CONTAINER\_GW|get container gateway, Required to call loopback|`ip route | grep default | awk '{print $3'` | container's gateway IP|
  USE\_DOCKERIZE| `go template` usage ( yes/no )|yes  ||
  VIEW\_CONFIG| Config print at launch ( yes/no )|no       ||

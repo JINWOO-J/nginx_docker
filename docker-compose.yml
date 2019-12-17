@@ -1,8 +1,8 @@
 version: '3'
 services:
-   prep:
+   prep-node:
       image: 'iconloop/prep-node:1912090356xb1e1fe-dev'
-      container_name: prep
+      container_name: prep-node
       cap_add:
          - SYS_TIME
       image: 'iconloop/prep-node:1911121115x323d60'
@@ -17,13 +17,10 @@ services:
          PRIVATE_PASSWORD: "{==YOUR_KEY_PASSWORD==}"
          CERT_PATH: "/cert"
          SERVICE: "zicon"
+         FASTEST_START: "yes"
       volumes:
          - ./data:/data
          - ./cert:/cert
-         FASTEST_START: "yes"
-         CERT_PATH: "/cert"
-         PRIVATE_KEY_FILENAME: "YOUR KEY NAME"
-         PRIVATE_PASSWORD: "YOUR KEY PASSWORD"
       cap_add:
          - SYS_TIME
       volumes:

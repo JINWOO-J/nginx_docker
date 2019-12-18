@@ -41,6 +41,7 @@ server {
         {{ if eq .Env.PREP_NGINX_ALLOWIP "yes" }}
         include /etc/nginx/conf.d/*.conf;
         include /etc/nginx/manual_acl/*.conf;
+        allow 127.0.0.1;
         deny all;
         {{ end }}
         {{ if eq .Env.PREP_NGINX_ALLOWIP "no" }}
@@ -145,6 +146,7 @@ server {
         {{ if eq .Env.PREP_NGINX_ALLOWIP "yes" }}
         include /etc/nginx/manual_acl/*.conf;
         include /etc/nginx/conf.d/*.conf;
+        allow 127.0.0.1;
         deny all;
         {{ end }}
         {{ if eq .Env.PREP_NGINX_ALLOWIP "no" }}

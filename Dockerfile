@@ -10,11 +10,15 @@ ENV TZ "Asia/Seoul"
 
 # Nginx allow Prep dynamic IP - cron Setting
 ADD ./policy/prepnode_ipscan_cron /etc/cron.d/prepnode_ipscan_cron
+ADD ./logrotate/nginx_logrotate_cron /etc/cron.d/nginx_logrotate_cron
+ADD ./logrotate/nginx /etc/logrotate.d/nginx
 RUN chmod 0644 /etc/cron.d/prepnode_ipscan_cron
+RUN chmod 0644 /etc/cron.d/nginx_logrotate_cron
+RUN chmod 0644 /etc/logrotate.d/nginx
 
 RUN sed -i 's/archive.ubuntu.com/ftp.daum.net/g' /etc/apt/sources.list
 RUN echo $TZ > /etc/timezone && \
-    apt-get update && apt-get install -y tzdata inotify-tools jq cron && \
+    apt-get update && apt-get install -y tzdata inotify-tools jq cron logrotate && \
     rm /etc/localtime && \
     ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
     dpkg-reconfigure -f noninteractive tzdata && \

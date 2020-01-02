@@ -1,0 +1,11 @@
+/var/log/nginx/*.log {
+        copytruncate
+        daily
+        missingok
+        rotate 7
+        compress
+        notifempty
+        create 644 root root
+        dateformat .%Y-%m-%d.log
+        dateext
+}

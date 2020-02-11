@@ -28,6 +28,7 @@ server {
     server_name localhost;
     access_log  /var/log/nginx/$host-access.log main if=$loggable;
     error_log   /var/log/nginx/$host-error.log error;
+    error_page  503  /error/error.json;
     location / {
         {{ if eq .Env.USE_NGINX_THROTTLE "yes" }}
             {{ if eq .Env.NGINX_THROTTLE_BY_IP "yes" }}
@@ -51,6 +52,12 @@ server {
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_read_timeout {{.Env.NGINX_PROXY_TIMEOUT}};
+    }
+
+    location ~/error/* {
+        default_type application/json;
+        try_files $uri =503;
+        root /var/www/;
     }
 
     #websocket setting
@@ -92,6 +99,7 @@ server {
 {{ else if eq  .Env.NGINX_LOG_OUTPUT "file"}}
     access_log  /var/log/nginx/$host-access.log main if=$loggable;
     error_log   /var/log/nginx/$host-error.log error;
+    error_page  503 = /error/error.json;
 {{ end }}
 
 {{ if eq .Env.PROXY_MODE "yes" }}
@@ -159,6 +167,11 @@ server {
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         grpc_read_timeout {{.Env.NGINX_PROXY_TIMEOUT}};
+    }
+
+    location ~/error/* {
+        default_type application/json;
+        root /var/www/;
     }
 {{ else }}
 

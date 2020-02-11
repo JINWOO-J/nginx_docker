@@ -1,0 +1,9 @@
+
+--build-arg DEBUG_BUILD=no  
+--build-arg NAME=nginx  
+--build-arg NGINX_VERSION=nginx-1.17.1  
+--build-arg REPO_HUB=looploy  
+--build-arg SED_OPTION=''  
+--build-arg TAGNAME=1.17.1  
+--build-arg UNAME_S=Darwin  
+--build-arg VERSION=1.17.1  

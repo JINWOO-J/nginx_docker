@@ -97,6 +97,7 @@ RUN userdel www-data && groupadd -r www-data -g ${USERID} && \
 
 # Nginx allow Prep IP conf file
 COPY policy /etc/nginx/policy/
+COPY error /var/www/error/
 
 COPY files /
 

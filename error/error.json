@@ -1,0 +1,5 @@
+{
+        "jsonrpc": "2.0",
+            "error": {"code":-31105, "message":"access denied"},
+            "id": 1
+}

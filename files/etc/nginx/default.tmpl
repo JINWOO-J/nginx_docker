@@ -28,7 +28,7 @@ server {
     server_name localhost;
     access_log  /var/log/nginx/$host-access.log main if=$loggable;
     error_log   /var/log/nginx/$host-error.log error;
-    error_page  503 = /error/error.json;
+    error_page  503  /error/error.json;
     location / {
         {{ if eq .Env.USE_NGINX_THROTTLE "yes" }}
             {{ if eq .Env.NGINX_THROTTLE_BY_IP "yes" }}
@@ -56,6 +56,7 @@ server {
 
     location ~/error/* {
         default_type application/json;
+        try_files $uri =503;
         root /var/www/;
     }
 

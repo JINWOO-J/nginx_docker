@@ -99,7 +99,7 @@ $ docker-compose up -d
 
 
 ## nginx docker ENV settings
-###### made date at 2019-12-17 13:49:49 
+###### made date at 2021-03-13 22:43:04 
 | Environment variable | Description|Default value| Allowed value|
 |--------|--------|-------|-------|
  TRACKER\_IPLIST| Required for tracker to monitor prep|15.164.151.101 15.164.183.120 52.79.145.149 54.180.178.129 ||
@@ -170,4 +170,6 @@ $ docker-compose up -d
  NGINX\_RATE\_LIMIT| rate limiting value|100r/s   ||
  NGINX\_BURST|Excessive requests are delayed until their number exceeds the maximum burst size,  maximum queue value ( If the value is `10`, apply from `11`)|10                 ||
  SET\_REAL\_IP\_FROM| SET\_REAL\_IP\_FROM|0.0.0.0/0   ||
+ IS\_BAN\_CTRL|false|false||
+ SLACK||||
  NGINX\_PROXY\_TIMEOUT|90|90||

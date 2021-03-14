@@ -26,10 +26,11 @@ map $request $loggable {
 server {
     listen {{ .Env.PREP_LISTEN_PORT }} ;
     server_name localhost;
-    access_log  /var/log/nginx/$host-access.log main if=$loggable;
-    error_log   /var/log/nginx/$host-error.log error;
+    access_log  /var/log/nginx/access.log main if=$loggable;
+    error_log   /var/log/nginx/error.log error;
     error_page  503  /error/error.json;
     location / {
+        include /etc/nginx/manual_acl/*.conf;
         {{ if eq .Env.USE_NGINX_THROTTLE "yes" }}
             {{ if eq .Env.NGINX_THROTTLE_BY_IP "yes" }}
         limit_req zone=by_ip burst={{.Env.NGINX_BURST}} {{.Env.NGINX_NODELAY}};
@@ -97,21 +98,22 @@ server {
     access_log /dev/stdout main;
     error_log /dev/stderr error;
 {{ else if eq  .Env.NGINX_LOG_OUTPUT "file"}}
-    access_log  /var/log/nginx/$host-access.log main if=$loggable;
-    error_log   /var/log/nginx/$host-error.log error;
+    access_log  /var/log/nginx/access.log main if=$loggable;
+    error_log   /var/log/nginx/error.log error;
     error_page  503 = /error/error.json;
 {{ end }}
 
 {{ if eq .Env.PROXY_MODE "yes" }}
 
     location / {
+        include /etc/nginx/manual_acl/*.conf;
         {{ if eq .Env.USE_NGINX_THROTTLE "yes" }}
             {{ if eq .Env.NGINX_THROTTLE_BY_IP "yes" }}
         limit_req zone=by_ip burst={{.Env.NGINX_BURST}} {{.Env.NGINX_NODELAY}};
             {{ end }}
             {{ if eq .Env.NGINX_THROTTLE_BY_URI "yes" }}
         limit_req zone=by_uri burst={{.Env.NGINX_BURST}} {{.Env.NGINX_NODELAY}};
-            {{ end }}            
+            {{ end }}
         {{ end }}
 
         {{  if eq .Env.PRIORTY_RULE "deny" }}
@@ -122,7 +124,7 @@ server {
             {{ if ne $ipaddr "" }}
                 {{ printf "deny %v;" $ipaddr }}
             {{ end }}
-        {{ end }}        
+        {{ end }}
 
         proxy_pass {{.Env.PROXY_PASS_ENDPOINT}};
         proxy_set_header X-Real-IP $remote_addr;
@@ -131,25 +133,26 @@ server {
     }
 {{ else if eq .Env.GRPC_PROXY_MODE "yes" }}
     location / {
+        include /etc/nginx/manual_acl/*.conf;
         {{ if eq .Env.USE_NGINX_THROTTLE "yes" }}
             {{ if eq .Env.NGINX_THROTTLE_BY_IP "yes" }}
         limit_req zone=by_ip burst={{.Env.NGINX_BURST}} {{.Env.NGINX_NODELAY}};
             {{ end }}
             {{ if eq .Env.NGINX_THROTTLE_BY_URI "yes" }}
         limit_req zone=by_uri burst={{.Env.NGINX_BURST}} {{.Env.NGINX_NODELAY}};
-            {{ end }}            
+            {{ end }}
         error_log /var/log/nginx/bad_Limit-error.log;
         {{ end }}
 
         {{  if eq .Env.PRIORTY_RULE "deny" }}
             deny all;
         {{ end }}
-        
+
         {{ range $ipaddr :=  split .Env.NGINX_DENY_IP " " }}
             {{ if ne $ipaddr "" }}
                 {{ printf "deny %v;" $ipaddr }}
             {{ end }}
-        {{ end }}        
+        {{ end }}
 
         {{ if eq .Env.PREP_NGINX_ALLOWIP "yes" }}
         include /etc/nginx/manual_acl/*.conf;
@@ -194,14 +197,14 @@ server {
 
     {{ if gt (len .Env.DEFAULT_EXT_LOCATION)  0 }}
         location ~ [^/]\.{{.Env.DEFAULT_EXT_LOCATION}}(/|$) {
-            #include fastcgi-php.conf; 
+            #include fastcgi-php.conf;
             fastcgi_index /index.{{.Env.DEFAULT_EXT_LOCATION}};
             include fastcgi_params;
             fastcgi_split_path_info       ^(.+\.{{.Env.DEFAULT_EXT_LOCATION}})(/.+)$;
             fastcgi_param PATH_INFO       $fastcgi_path_info;
             fastcgi_param PATH_TRANSLATED $document_root$fastcgi_path_info;
             fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-            try_files   $uri =404;        
+            try_files   $uri =404;
             fastcgi_pass _upstreamer;
         }
     {{ end }}

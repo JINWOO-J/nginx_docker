@@ -63,7 +63,8 @@ ENV NGINX_BUILD_DEPS bzip2 \
         vim \
         runit \
         iproute2 \
-        gnupg
+        gnupg \
+        python3.7
 
 ENV NGINX_EXTRA_BUILD_DEPS gcc make pkg-config  \
                             libbz2-dev \

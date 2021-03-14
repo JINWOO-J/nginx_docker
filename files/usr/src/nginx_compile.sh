@@ -36,15 +36,20 @@ PrintOK "apt-get update" $?
 apt-get install -y $NGINX_BUILD_DEPS $NGINX_EXTRA_BUILD_DEPS --no-install-recommends > /dev/null
 PrintOK "apt-get install" $?
 
+curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+python3.7 get-pip.py
+pip3 install python-dateutil slacker
+
+
 rm -rf /var/lib/apt/lists/*
 mkdir -p /var/log/nginx
 #set -x
 
-for server in ha.pool.sks-keyservers.net hkp://keyserver.ubuntu.com:80 hkp://p80.pool.sks-keyservers.net:80 pgp.mit.edu; 
+for server in ha.pool.sks-keyservers.net hkp://keyserver.ubuntu.com:80 hkp://p80.pool.sks-keyservers.net:80 pgp.mit.edu;
 do
     echo "Fetching GPG key $NGINX_GPG from $server";
-    gpg --keyserver "$server" --keyserver-options timeout=10 --recv-keys $NGINX_GPG && found=yes && break; 
-done 
+    gpg --keyserver "$server" --keyserver-options timeout=10 --recv-keys $NGINX_GPG && found=yes && break;
+done
 PrintOK "import to gpg keyserver [$server]" $?
 
 curl -SL --silent -f "http://nginx.org/download/${NGINX_VERSION}.tar.gz" -o nginx.tar.bz2

@@ -23,7 +23,7 @@ services:
 
 
    nginx_throttle:
-      image: 'looploy/nginx:1.17.1-1a'
+      image: 'looploy/nginx:1.19.8
       container_name: nginx_throttle
       restart: "always"
       environment:

@@ -1,6 +1,6 @@
 REPO_HUB = looploy
 NAME = nginx
-VERSION = 1.17.1
+VERSION = 1.19.8
 TAGNAME = $(VERSION)
 DEBUG_BUILD = no
 NGINX_VERSION = $(NAME)-$(VERSION)
@@ -8,7 +8,7 @@ NGINX_VERSION = $(NAME)-$(VERSION)
 
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
-	SED_OPTION = 
+	SED_OPTION =
 endif
 ifeq ($(UNAME_S),Darwin)
 	SED_OPTION = ''
@@ -64,7 +64,7 @@ changeconfig:
 		 docker rm "$$CONTAINER_ID"
 
 build:  make_build_args
-		sed -i $(SED_OPTION) "s/$(REPO_HUB)\/$(NAME).*/$(REPO_HUB)\/$(NAME):$(VERSION)/g" docker-compose_grpc.yml	
+		sed -i $(SED_OPTION) "s/$(REPO_HUB)\/$(NAME).*/$(REPO_HUB)\/$(NAME):$(VERSION)/g" docker-compose_grpc.yml
 		sed -i $(SED_OPTION) "s/$(REPO_HUB)\/$(NAME).*/$(REPO_HUB)\/$(NAME):$(VERSION)/g" docker-compose.yml
 		docker build --no-cache --rm=true  $(shell cat BUILD_ARGS)  -t $(REPO_HUB)/$(NAME):$(TAGNAME) .
 
@@ -99,7 +99,7 @@ init:
 		git remote add origin git@repo.theloop.co.kr:jinwoo/$(NAME).git
 		git push -u origin master
 bash:
-	docker run -e NODE_CONTAINER_NAME=20.20.4.90 -p 9000:9000 -p 7100:7100  -it --rm $(REPO_HUB)/$(NAME):$(TAGNAME) bash
+	docker run -v ${PWD}:/mount -e NODE_CONTAINER_NAME=20.20.4.90 -p 9000:9000 -p 7100:7100  -it --rm $(REPO_HUB)/$(NAME):$(TAGNAME) bash
 
 docs:
 	@$(shell ./makeMarkDown.sh)

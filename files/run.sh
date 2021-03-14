@@ -87,6 +87,8 @@ export NGINX_RATE_LIMIT=${NGINX_RATE_LIMIT:-"100r/s"}   # rate limiting value
 export NGINX_BURST=${NGINX_BURST:-"10"}                 #Excessive requests are delayed until their number exceeds the maximum burst size,  maximum queue value ( If the value is `10`, apply from `11`)
 
 export SET_REAL_IP_FROM=${SET_REAL_IP_FROM:-"0.0.0.0/0"}   # SET_REAL_IP_FROM
+export IS_BAN_CTRL=${IS_BAN_CTRL:-"false"}
+export SLACK=${SLACK:-""}
 
 
 RED='\033[0;31m'
@@ -98,6 +100,10 @@ while ! dockerize -wait tcp://$NODE_CONTAINER_NAME:9000; do
   sleep 1
 done
 
+mkdir -p /etc/nginx/manual_acl
+touch /etc/nginx/manual_acl/deny.conf
+touch /etc/nginx/conf.d/deny.conf
+touch /etc/nginx/conf.d/allow.conf
 
 ## Nginx allow dynamic prep ip 설정
 if [ $PREP_MODE == "yes" ];
@@ -150,7 +156,7 @@ then
 fi
 
 if [ $VIEW_CONFIG == "yes" ];
-then    
+then
     cat /etc/nginx/nginx.conf
     cat /etc/nginx/sites-available/default.conf
 fi
@@ -161,5 +167,12 @@ echo $PREP_NODE_LIST_API > /etc/nginx/policy/.cron-env
 echo $PREP_AVAIL_API > /etc/nginx/policy/.cron-env-avail
 
 printenv | grep -v EXTRA | grep -v  LS_COLORS | grep -v '^_' | awk -F "=" '{print $1 "=" "\"" $2 "\"" }'> ./docker-envs
+
+
+if [ $IS_BAN_CTRL == "true" ];then
+    mkdir -p /var/log/nginx
+    touch /var/log/nginx/access.log
+    /src/log_ban.py &
+fi
 
 nginx
